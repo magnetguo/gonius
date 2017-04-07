@@ -1,0 +1,9 @@
+.DS_Store
+._.DS_Store
+.vs/gonius/v15/Browse.VC.db
+.vs/gonius/v15/Browse.VC.opendb
+gonius.sln
+gonius.vcxproj
+gonius.vcxproj.filters
+.vs/
+Debug/
