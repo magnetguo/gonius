@@ -11,19 +11,19 @@ TofeGame::TofeGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay)
 	/** first we initialize the empty positions 
 		We should do the initialization of empty at concrete game,
 		as like chess, not all game are initialized as all empty. */
-	for (SgGrid it_row=1; it_row<=GetRows(); it_row++) {
-		for (SgGrid it_col=1; it_col<=GetCols(); it_col++) {
-			SetState(GetPt(it_col, it_row), TofeState(SG_EMPTY));
-			m_empty.push_back(GetPt(it_col, it_row));
+	for (SgGrid it_row=1; it_row<=getRows(); it_row++) {
+		for (SgGrid it_col=1; it_col<=getCols(); it_col++) {
+			setState(getPt(it_col, it_row), TofeState(SG_EMPTY));
+			m_empty.push_back(getPt(it_col, it_row));
 		}
 	}
 
 	// then we pick 2 random position and put a 2 and 4 on them
-	SetState(PickOneRandomEmptyPos(), TofeState(SG_WHITE, 2));
-	SetState(PickOneRandomEmptyPos(), TofeState(SG_WHITE, 4));
+	setState(pickOneRandomEmptyPos(), TofeState(SG_WHITE, 2));
+	setState(pickOneRandomEmptyPos(), TofeState(SG_WHITE, 4));
 }
 
-SgPoint TofeGame::PickOneRandomEmptyPos() {
+SgPoint TofeGame::pickOneRandomEmptyPos() {
 	assert(!m_empty.empty()); // there should be available point
 	std::uniform_int_distribution<int> uni(0, m_empty.size()-1);
 	int rand = uni(rd);
@@ -36,54 +36,54 @@ SgPoint TofeGame::PickOneRandomEmptyPos() {
 bool TofeGame::toMove(TofeMove::Movement m) {
 	int m_int = static_cast<int>(m);
 	bool changed = false;
-	Backup();
-	SgGrid cols = this->GetCols(), rows = this->GetRows();
+	backup();
+	SgGrid cols = this->getCols(), rows = this->getRows();
 	SgPoint outer_end = (m_int < 2) ? cols : rows;
 	SgPoint inner_start = (m_int % 2 == 1) ? ((m_int < 2) ? rows : cols) : 1;
 	SgPoint inner_end = (m_int % 2 == 1) ? 1 : ((m_int < 2) ? rows : cols);
 	int change = (m_int % 2 == 1) ? -1 : 1;
 	for (SgGrid m=1; m<=outer_end; m++) {
 		for (SgGrid n=inner_start; n != inner_end+change; n+=change) {
-			SgPoint p = (m_int < 2) ? this->GetPt(m, n) : this->GetPt(n, m);
+			SgPoint p = (m_int < 2) ? this->getPt(m, n) : this->getPt(n, m);
 			//std::cout << m << n <<std::endl;
-			if (this->GetState(p).GetColor() == SG_EMPTY)
+			if (this->getState(p).getColor() == SG_EMPTY)
 				continue;
 
 			for (SgGrid k=n-change; ; k-=change) {
 				//std::cout << k << std::endl;
-				SgPoint p2 = (m_int < 2) ? this->GetPt(m, k) : this->GetPt(k, m);
-				if (this->GetState(p2).GetColor() == SG_EMPTY){
+				SgPoint p2 = (m_int < 2) ? this->getPt(m, k) : this->getPt(k, m);
+				if (this->getState(p2).getColor() == SG_EMPTY){
 					changed = true;
 					continue;
 				}
-				if (this->GetState(p2).GetColor() == SG_BORDER) {
+				if (this->getState(p2).getColor() == SG_BORDER) {
 					SgPoint nextToBorder = 
-					(m_int < 2) ? this->GetPt(m, k+change) : this->GetPt(k+change, m);
+					(m_int < 2) ? this->getPt(m, k+change) : this->getPt(k+change, m);
 					if (nextToBorder != p) {
 						// not next to border
 						// if next to border, nothing to do
-						this->SetState(nextToBorder, this->GetState(p));
-						this->SetState(p, TofeState(SG_EMPTY));
+						this->setState(nextToBorder, this->getState(p));
+						this->setState(p, TofeState(SG_EMPTY));
 						m_empty.erase(find(m_empty.begin(), m_empty.end(), nextToBorder));
 						m_empty.push_back(p);
 						changed = true;
 					}
 					break;
 				}
-				if (this->GetState(p2) == this->GetState(p)) {
+				if (this->getState(p2) == this->getState(p)) {
 					//std::cout << "combine happen " << p2 << p << std::endl;
-					this->SetState(p2, TofeState(SG_WHITE, 2*this->GetState(p2).GetValue()));
-					this->SetState(p, TofeState(SG_EMPTY));
+					this->setState(p2, TofeState(SG_WHITE, 2*this->getState(p2).getValue()));
+					this->setState(p, TofeState(SG_EMPTY));
 					m_empty.push_back(p);
 					changed = true;
 				} else {
 					SgPoint n_k = 
-					(m_int < 2) ? this->GetPt(m, k+change) : this->GetPt(k+change, m);
+					(m_int < 2) ? this->getPt(m, k+change) : this->getPt(k+change, m);
 					if (n_k != p) {
-						assert(this->GetState(n_k).GetColor() == SG_EMPTY);
-						this->SetState(n_k , this->GetState(p));
+						assert(this->getState(n_k).getColor() == SG_EMPTY);
+						this->setState(n_k , this->getState(p));
 						m_empty.erase(find(m_empty.begin(), m_empty.end(), n_k));
-						this->SetState(p, TofeState(SG_EMPTY));
+						this->setState(p, TofeState(SG_EMPTY));
 						m_empty.push_back(p);	
 					}
 				} 
@@ -94,7 +94,7 @@ bool TofeGame::toMove(TofeMove::Movement m) {
 	return changed;
 }
 
-bool TofeGame::Legal(SgBlackWhite color, TofeMove move) {
+bool TofeGame::legal(SgBlackWhite color, TofeMove move) {
 	/** First, a legal should be at proper turn
 		, if not, a fatal error, drop out. */
 	// assert(color == SG_BLACK && !move.isMovement());
@@ -104,29 +104,31 @@ bool TofeGame::Legal(SgBlackWhite color, TofeMove move) {
 	if (color == SG_BLACK)
 		return !m_empty.empty();
 	else {
-		if (toMove(move.GetMovement())) {
+		if (toMove(move.getMovement())) {
 			//std::cout << "before takeback" << std::endl;
 			//Print(std::cout);
-			TakeBack();
+			takeback();
 			//std::cout << "after takeback" << std::endl;
 			//Print(std::cout);
 			return true;
+		} else {
+			takeback();
+			return false;
 		}
-		return false;
 	}
 }
 
 /** The move and state transfer logic of 2048 game */
-bool TofeGame::Play(SgBlackWhite color, TofeMove move) {
-	if (Legal(color, move)) {
+bool TofeGame::play(SgBlackWhite color, TofeMove move) {
+	if (legal(color, move)) {
 	//if (true) {
 		if (color == SG_BLACK)
 			/** We can have a random 2 or 4 in the future */
-			SetState(move.GetPoint(), TofeState(SG_WHITE, move.GetValue())); 
+			setState(move.getPoint(), TofeState(SG_WHITE, move.getValue())); 
 		else{
-			toMove(move.GetMovement());
+			toMove(move.getMovement());
 		}
-		this->SwitchToPlay();
+		this->switchToPlay();
 		return true;
 	} else
 		return false;
@@ -134,6 +136,6 @@ bool TofeGame::Play(SgBlackWhite color, TofeMove move) {
 
 //----------------------------------------------------------------------------
 bool operator==(const TofeState &&lhs, const TofeState &&rhs) {
-	return (lhs.GetColor() == rhs.GetColor() 
-			&& lhs.GetValue() == rhs.GetValue());
+	return (lhs.getColor() == rhs.getColor() 
+			&& lhs.getValue() == rhs.getValue());
 }

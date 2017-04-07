@@ -30,7 +30,7 @@ public:
 	}
 
 	/** construct with random type */
-	TofeMove(SgPoint p, int v) : m_p(p), m_value(v), m_type_movement(false) 
+	TofeMove(SgPoint p, int v) : m_generation(p, v), m_type_movement(false) 
 	{
 		assert(v == 2 || v == 4);
 	}
@@ -40,22 +40,21 @@ public:
 		return m_type_movement;
 	}
 
-	Movement GetMovement() const {
+	Movement getMovement() const {
 		return m_movement;
 	}
 
-	SgPoint GetPoint() const {
-		return m_p;
+	SgPoint getPoint() const {
+		return m_generation.first;
 	}
 
-	int GetValue() const {
-		return m_value;
+	int getValue() const {
+		return m_generation.second;
 	}
 
 private:
 	Movement m_movement;
-	SgPoint m_p;
-	int m_value;
+	std::pair<SgPoint, int> m_generation;
 	bool m_type_movement;
 };
 
@@ -84,11 +83,11 @@ public:
 			return std::to_string(m_value);
 	}
 
-	int GetValue() const {
+	int getValue() const {
 		return m_value;
 	}
 
-	SgColor GetColor() const {
+	SgColor getColor() const {
 		return m_color;
 	}
 
@@ -104,28 +103,28 @@ class TofeGame : public SgGame<TofeState, TofeMove> {
 public:
 	TofeGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay);
 
-	bool Play(SgBlackWhite color, TofeMove move) override;
+	bool play(SgBlackWhite color, TofeMove move) override;
 
-	bool Legal(SgBlackWhite color, TofeMove move) override;
+	bool legal(SgBlackWhite color, TofeMove move) override;
 
-	void Backup() override {
+	void backup() override {
 		m_last_board = m_board;
 		m_last_empty = m_empty;
 	}
 
-	void TakeBack() override {
+	void takeback() override {
 		m_board = m_last_board;
 		m_empty = m_last_empty;
 	}
 
 	/** Utility to generate a random number from 0 to m_empty.size()-1 */
-	SgPoint PickOneRandomEmptyPos();
+	SgPoint pickOneRandomEmptyPos();
 
 	/** Here we can access the name in tmeplate base class.
 		We only include the names if we need access them publically, or
 		we only need add this-> */
-	using SgGame<TofeState, TofeMove>::Print;
-	using SgGame<TofeState, TofeMove>::Play;
+	using SgGame<TofeState, TofeMove>::print;
+	using SgGame<TofeState, TofeMove>::play;
 private:
 	/** The storage of still empty point,
 		used for random.

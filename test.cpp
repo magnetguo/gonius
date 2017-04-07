@@ -10,7 +10,7 @@ int main() {
 	char m;
 	TofeMove move;
 	while (true) {
-		game.Print(cout);
+		game.print(cout);
 		cin >> m;
 		if (m == 'w')
 			move = TofeMove(TofeMove::TOFE_UP);
@@ -20,8 +20,9 @@ int main() {
 			move = TofeMove(TofeMove::TOFE_LEFT);
 		if (m == 'd')
 			move = TofeMove(TofeMove::TOFE_RIGHT);
-		game.Play(move);	
-		game.Play(TofeMove(game.PickOneRandomEmptyPos(), 2));
+		if(!game.play(move)) continue;
+
+		game.play(TofeMove(game.pickOneRandomEmptyPos(), 2));
 	}
 
 	return 0;
