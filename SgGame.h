@@ -24,6 +24,18 @@ typedef unsigned SgPoint;
 typedef unsigned SgGrid;
 
 //----------------------------------------------------------------------------
+/** Utility functions. */
+namespace {
+	SgBlackWhite Opposite(SgBlackWhite state) {
+		return (SgBlackWhite) (SG_WHITE + SG_BLACK - state);
+	}	
+
+	/** Compute the board size by cols and rows of inner playing grid. */
+	SgPoint ComputeBoardSize(SgGrid in_cols, SgGrid in_rows) {
+		return in_rows * in_cols + 2 * (in_rows+1) + 2 * (in_cols+1);
+	}
+}
+//----------------------------------------------------------------------------
 template<class State, class Move>
 class SgGame {
 public:
@@ -148,20 +160,7 @@ private:
 	//int m_numPiece;
 
 	SgBlackWhite m_firstPlayer, m_toPlay;
-
-	/** last board, for the tackback of game. */
-
-	/** Utilities */
-	/** Compute the board size by cols and rows of inner playing grid. */
-	SgPoint ComputeBoardSize(SgGrid in_cols, SgGrid in_rows) {
-		return in_rows * in_cols + 2 * (in_rows+1) + 2 * (in_cols+1);
-	}
-
-	SgBlackWhite Opposite(SgBlackWhite state) {
-		return (SgBlackWhite) (SG_WHITE + SG_BLACK - state);
-	}	
 };
-
 //----------------------------------------------------------------------------
 template<class State, class Move>
 SgGame<State, Move>::SgGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay)
