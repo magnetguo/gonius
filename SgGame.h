@@ -63,7 +63,9 @@ public:
       	Restores the game to the condition it was in before the move was made.
       	Very important to restore the correct side-to-play as searches use this.
       	Returns whether or not the take back was successful. */
-  	virtual void TakeBack() = 0;
+  	virtual void TakeBack() {
+  		m_board = m_last_board;
+  	}
 
 	virtual void Backup() {
 		m_last_board = m_board;
@@ -117,10 +119,10 @@ public:
   	}
 
 	/** Transfer all grid row and col to points on board. */
-	SgPoint GetPt(SgGrid m, SgGrid n) const {
-		assert(m >= 0 && m < m_cols+2);
-		assert(n >= 0 && n < m_rows+2);
-		return n * (m_cols+2) + m;
+	SgPoint GetPt(SgGrid col_id, SgGrid row_id) const {
+		assert(col_id >= 0 && col_id < m_cols+2);
+		assert(row_id >= 0 && row_id < m_rows+2);
+		return row_id * (m_cols+2) + col_id;
 	}
 
 protected:

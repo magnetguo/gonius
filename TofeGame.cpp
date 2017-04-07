@@ -11,10 +11,10 @@ TofeGame::TofeGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay)
 	/** first we initialize the empty positions 
 		We should do the initialization of empty at concrete game,
 		as like chess, not all game are initialized as all empty. */
-	for (SgGrid n=1; n<=GetRows(); n++) {
-		for (SgGrid m=1; m<=GetCols(); m++) {
-			SetState(GetPt(m, n), TofeState(SG_EMPTY));
-			m_empty.push_back(GetPt(m, n));
+	for (SgGrid it_row=1; it_row<=GetRows(); it_row++) {
+		for (SgGrid it_col=1; it_col<=GetCols(); it_col++) {
+			SetState(GetPt(it_col, it_row), TofeState(SG_EMPTY));
+			m_empty.push_back(GetPt(it_col, it_row));
 		}
 	}
 
