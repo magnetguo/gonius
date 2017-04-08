@@ -38,9 +38,9 @@ bool TofeGame::toMove(TofeMove::Movement m) {
 	bool changed = false;
 	backup();
 	SgGrid cols = this->getCols(), rows = this->getRows();
-	SgPoint outer_end = (m_int < 2) ? cols : rows;
-	SgPoint inner_start = (m_int % 2 == 1) ? ((m_int < 2) ? rows : cols) : 1;
-	SgPoint inner_end = (m_int % 2 == 1) ? 1 : ((m_int < 2) ? rows : cols);
+	SgGrid outer_end = (m_int < 2) ? cols : rows;
+	SgGrid inner_start = (m_int % 2 == 1) ? ((m_int < 2) ? rows : cols) : 1;
+	SgGrid inner_end = (m_int % 2 == 1) ? 1 : ((m_int < 2) ? rows : cols);
 	int change = (m_int % 2 == 1) ? -1 : 1;
 	for (SgGrid m=1; m<=outer_end; m++) {
 		for (SgGrid n=inner_start; n != inner_end+change; n+=change) {
