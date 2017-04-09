@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------------------------
 #include "TofeHeuristic.h"
 #include <map>
+#include <cmath>
 #include <utility>
 //---------------------------------------------------------------------------------------------
 int reverseCalc(const TofeGame& g, TofeMove::Movement m) {
@@ -98,3 +99,9 @@ int diffSum(const TofeGame& g) {
 	return sum_row + sum_col;
 }
 
+double diffScore(const TofeGame& g) {
+	int cols = g.getCols(), rows = g.getRows();
+	int num_diff = cols * (rows - 1) + rows * (cols - 1);
+	double max_diff = num_diff * log(g.getMaxBlock());
+	return (max_diff - (double)diffSum(g)) / max_diff;
+}

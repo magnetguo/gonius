@@ -21,6 +21,8 @@ TofeGame::TofeGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay)
 	// then we pick 2 random position and put a 2 and 4 on them
 	setState(pickOneRandomEmptyPos(), TofeState(SG_WHITE, 2));
 	setState(pickOneRandomEmptyPos(), TofeState(SG_WHITE, 4));
+
+	m_max_block = 4;
 }
 
 SgPoint TofeGame::pickOneRandomEmptyPos() {
@@ -74,6 +76,9 @@ bool TofeGame::toMove(TofeMove::Movement m) {
 					//std::cout << "combine happen " << p2 << p << std::endl;
 					this->setState(p2, TofeState(SG_WHITE, 2*this->getState(p2).getValue()));
 					this->setState(p, TofeState(SG_EMPTY));
+
+					if (getState(p2).getValue() > m_max_block) m_max_block = getState(p2).getValue();
+
 					m_empty.push_back(p);
 					changed = true;
 				} else {

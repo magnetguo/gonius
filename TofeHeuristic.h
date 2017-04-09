@@ -14,6 +14,7 @@ double emptyScore(const TofeGame& g);
 
 /** return diff score of the current state,
 	which is the diff level between two adj blocks. */
+double diffScore(const TofeGame& g);
 
 //---------------------------------------------------------------------------------------------
 #endif // TOFE_HEURISTIC_H

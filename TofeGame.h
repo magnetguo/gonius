@@ -110,11 +110,13 @@ public:
 	void backup() override {
 		m_last_board = m_board;
 		m_last_empty = m_empty;
+		m_last_max_block = m_max_block;
 	}
 
 	void takeback() override {
 		m_board = m_last_board;
 		m_empty = m_last_empty;
+		m_max_block = m_last_max_block;
 	}
 
 	/** Utility to generate a random number from 0 to m_empty.size()-1 */
@@ -123,6 +125,10 @@ public:
 	/** Return the query of empty blocks. */
 	int getEmptyNum() const {
 		return m_empty.size();
+	}
+
+	int getMaxBlock() const {
+		return m_max_block;
 	}
 
 	/** Here we can access the name in template base class.
@@ -137,6 +143,9 @@ private:
 		but since the size of this vector is small, it's fine. */
 	std::vector<SgPoint> m_empty;
 	std::vector<SgPoint> m_last_empty;
+
+	int m_max_block;
+	int m_last_max_block;
 
 	/** Move to given direction, return whether we can move. */
 
