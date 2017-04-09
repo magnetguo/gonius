@@ -96,7 +96,7 @@ public:
 	/** Print all current board.
 		Here we offer a 'template method' like method, traverse all board,
 		but not implement by virtual functions. Instead, we use 
-		yype State's print */
+		type State's print */
 	void print(std::ostream& out) const;
 
   	/** Return the number of rows in the game. */
@@ -112,6 +112,12 @@ public:
   	SgPoint getSize() const {
     	return m_size;
   	}
+
+	/** Return the size of the game board as the number of points on the board.
+	Not includes border points. */
+	SgPoint getGameSize() const {
+		return m_rows*m_cols;
+	}
 
   	/** Returns the state of the board at the point (row, col).
   		row: 1 to m_row, col: 1 to m_col */

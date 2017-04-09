@@ -120,8 +120,13 @@ public:
 	/** Utility to generate a random number from 0 to m_empty.size()-1 */
 	SgPoint pickOneRandomEmptyPos();
 
-	/** Here we can access the name in tmeplate base class.
-		We only include the names if we need access them publically, or
+	/** Return the query of empty blocks. */
+	int getEmptyNum() const {
+		return m_empty.size();
+	}
+
+	/** Here we can access the name in template base class.
+		We only include the names if we need access them by public interface, or
 		we only need add this-> */
 	using SgGame<TofeState, TofeMove>::print;
 	using SgGame<TofeState, TofeMove>::play;

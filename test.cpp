@@ -1,9 +1,10 @@
 #include "TofeGame.h"
-
+#include "TofeHeuristic.h"
 #include <iostream>
 
 using std::cout;
 using std::cin;
+using std::endl;
 
 int main() {
 	TofeGame game(4, 4, SG_WHITE);
@@ -11,6 +12,8 @@ int main() {
 	TofeMove move;
 	while (true) {
 		game.print(cout);
+		//cout << emptyScore(game) << endl;
+		//cout << reverseScore(game) << endl;
 		cin >> m;
 		if (m == 'w')
 			move = TofeMove(TofeMove::TOFE_UP);
