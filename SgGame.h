@@ -91,7 +91,7 @@ public:
 
   	/** Evaluate the current position as being good or bad for the current player.
       	Used by search algorithms.  Higher values are better. */
-  	//virtual double Evaluate() const = 0;
+  	virtual double evaluate() const = 0;
 
 	/** Print all current board.
 		Here we offer a 'template method' like method, traverse all board,

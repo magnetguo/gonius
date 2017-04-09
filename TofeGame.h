@@ -107,6 +107,8 @@ public:
 
 	bool legal(SgBlackWhite color, TofeMove move) override;
 
+	double evaluate() const override;
+
 	void backup() override {
 		m_last_board = m_board;
 		m_last_empty = m_empty;

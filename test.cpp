@@ -14,7 +14,8 @@ int main() {
 		game.print(cout);
 		//cout << emptyScore(game) << endl;
 		//cout << reverseScore(game) << endl;
-		cout << diffScore(game) << endl;
+		//cout << diffScore(game) << endl;
+		cout << game.evaluate() << endl;
 		cin >> m;
 		if (m == 'w')
 			move = TofeMove(TofeMove::TOFE_UP);

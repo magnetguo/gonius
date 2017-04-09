@@ -1,4 +1,7 @@
 #include "TofeGame.h"
+#include "TofeHeurDiff.h"
+#include "TofeHeurEmpty.h"
+#include "TofeHeurReverse.h"
 
 //----------------------------------------------------------------------------
 
@@ -137,6 +140,10 @@ bool TofeGame::play(SgBlackWhite color, TofeMove move) {
 		return true;
 	} else
 		return false;
+}
+
+double TofeGame::evaluate() const {
+
 }
 
 //----------------------------------------------------------------------------
