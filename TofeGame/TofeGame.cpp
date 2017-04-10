@@ -1,6 +1,6 @@
 #include "TofeGame.h"
-#include "SgHeuristicAverageEvaluator.h"
-#include "TofeHeuristicFactory.h"
+#include "../SgHeuristicAverageEvaluator.h"
+#include "./TofeHeuristic/TofeHeuristicFactory.h"
 
 //----------------------------------------------------------------------------
 
@@ -143,7 +143,8 @@ bool TofeGame::play(SgBlackWhite color, TofeMove move) {
 
 double TofeGame::evaluate() const {
 	SgHeuristicAverageEvaluator<TofeGame, TofeHeuristicFactory>
-	ha_evaluator = SgHeuristicAverageEvaluator<TofeGame, TofeHeuristicFactory>(*this, vector<string>{"HeuristicDiff"});
+	ha_evaluator = SgHeuristicAverageEvaluator<TofeGame, TofeHeuristicFactory>
+	(*this, vector<string>{"HeuristicDiff", "HeuristicEmpty", "HeuristicReverse"});
 	return ha_evaluator.score();
 }
 

@@ -26,7 +26,7 @@ public:
 		FactoryMap& factory_map = getFactoryMap();
 		assert(!factory_map.empty());
 		for (auto it=heuristic_ids.begin(); it != heuristic_ids.end(); it++) {
-			std::cout << *it << std::endl;
+			// std::cout << *it << std::endl;
 			auto itm = factory_map.find(*it);
 			assert (itm != factory_map.end());
 			//	throw "unknown heuristic " + *it;

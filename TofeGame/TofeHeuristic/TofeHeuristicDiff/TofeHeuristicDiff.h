@@ -2,7 +2,7 @@
 #ifndef TOFE_HEURISTIC_DIFF_H
 #define TOFE_HEURISTIC_DIFF_H
 
-#include "TofeHeuristic.h"
+#include "../TofeHeuristic.h"
 
 //----------------------------------------------------------------------------
 class TofeHeuristicDiff : public TofeHeuristic {

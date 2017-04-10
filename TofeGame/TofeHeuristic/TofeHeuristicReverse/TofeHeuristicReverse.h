@@ -1,12 +1,12 @@
-#ifndef TOFE_HEUR_REVERSE_H
-#define TOFE_HEUR_REVERSE_H
+#ifndef TOFE_HEURISTIC_REVERSE_H
+#define TOFE_HEURISTIC_REVERSE_H
 
-#include "TofeHeuristic.h"
+#include "../TofeHeuristic.h"
 //----------------------------------------------------------------------------
-class TofeHeurReverse : public TofeHeuristic {
+class TofeHeuristicReverse : public TofeHeuristic {
 public:
-	TofeHeurReverse(const TofeGame& to_evaluate)
-		: TofeHeuristic(to_evaluate) { }
+	TofeHeuristicReverse(const TofeGame& g)
+		: TofeHeuristic(g) { }
 	/** return reverse score of the current state,
 	which is the proportion of non-reverses
 	of all potential reverses. */

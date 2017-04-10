@@ -1,7 +1,7 @@
 #ifndef TOFE_GAME_H
 #define TOFE_GAME_H
 
-#include "SgGame.h"
+#include "../SgGame.h"
 #include <cassert>
 #include <string>
 #include <sstream>

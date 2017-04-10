@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 #ifndef TOFE_HEURISTIC_H
 #define TOFE_HEURISTIC_H
-#include "TofeGame.h"
-#include "SgHeuristic.h"
+#include "../TofeGame.h"
+#include "../../SgHeuristic.h"
 //----------------------------------------------------------------------------
 class TofeHeuristic : public SgHeuristic{
 public:

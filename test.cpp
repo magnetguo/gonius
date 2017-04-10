@@ -1,5 +1,5 @@
-#include "TofeGame.h"
-#include "TofeHeuristic.h"
+#include "./TofeGame/TofeGame.h"
+#include "./TofeGame/TofeHeuristic/TofeHeuristic.h"
 #include <iostream>
 
 using std::cout;
