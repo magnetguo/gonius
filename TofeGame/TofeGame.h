@@ -109,6 +109,12 @@ public:
 
 	double evaluate() const override;
 
+	bool hasWin() override;
+
+	bool endOfGame() override;
+
+	void generate(std::vector<TofeMove>& moves) override;
+
 	void backup() override {
 		m_last_board = m_board;
 		m_last_empty = m_empty;
@@ -127,6 +133,10 @@ public:
 	/** Return the query of empty blocks. */
 	int getEmptyNum() const {
 		return m_empty.size();
+	}
+
+	const std::vector<SgPoint>& getEmptyPoints() const {
+		return m_empty;
 	}
 
 	int getMaxBlock() const {
@@ -149,10 +159,9 @@ private:
 	int m_max_block;
 	int m_last_max_block;
 
-	/** Move to given direction, return whether we can move. */
-
 	std::random_device rd;
 
+	/** Move to given direction, return whether we can move. */
 	bool toMove(TofeMove::Movement m);
 };
 

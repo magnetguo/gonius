@@ -84,14 +84,18 @@ public:
 	}
 
   	/** Returns whether or not the game is over. */
-  	//virtual bool EndOfGame() const = 0;
+  	virtual bool endOfGame() = 0;
   
   	/** Returns whether or not there is a winner. */
-  	//virtual bool HasWin() const = 0;
+  	virtual bool hasWin() = 0;
 
   	/** Evaluate the current position as being good or bad for the current player.
       	Used by search algorithms.  Higher values are better. */
   	virtual double evaluate() const = 0;
+
+  	/** Generate the set of all legal moves at current game position,
+  		Store them in the vector pointed by moves.(copy ref for speed). */
+  	virtual void generate(std::vector<Move>& moves) = 0;
 
 	/** Print all current board.
 		Here we offer a 'template method' like method, traverse all board,

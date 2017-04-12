@@ -10,11 +10,11 @@ int main() {
 	TofeGame game(4, 4, SG_WHITE);
 	char m;
 	TofeMove move;
-	while (true) {
+	while (!game.endOfGame()) {
 		game.print(cout);
-		//cout << emptyScore(game) << endl;
-		//cout << reverseScore(game) << endl;
-		//cout << diffScore(game) << endl;
+		std::vector<TofeMove> moves;
+		//game.generate(moves);
+
 		cout << game.evaluate() << endl;
 		cin >> m;
 		if (m == 'w')
@@ -27,8 +27,10 @@ int main() {
 			move = TofeMove(TofeMove::TOFE_RIGHT);
 		if(!game.play(move)) continue;
 
+		//game.generate(moves);
 		game.play(TofeMove(game.pickOneRandomEmptyPos(), 2));
 	}
-
+	cout << "end of game!" << endl;
+	cout << "the max is " << game.getMaxBlock() << endl;
 	return 0;
 }

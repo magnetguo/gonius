@@ -109,7 +109,7 @@ bool TofeGame::legal(SgBlackWhite color, TofeMove move) {
 	// assert(color == SG_WHITE && move.isMovement());
 
 	if (color == SG_BLACK)
-		return !m_empty.empty();
+		return getState(move.getPoint()).getColor() == SG_EMPTY;
 	else {
 		if (toMove(move.getMovement())) {
 			//std::cout << "before takeback" << std::endl;
@@ -146,6 +146,58 @@ double TofeGame::evaluate() const {
 	ha_evaluator = SgHeuristicAverageEvaluator<TofeGame, TofeHeuristicFactory>
 	(*this, vector<string>{"HeuristicDiff", "HeuristicEmpty", "HeuristicReverse"});
 	return ha_evaluator.score();
+}
+
+bool TofeGame::endOfGame() {
+	// if it's our turn and we find that there is no direction
+	// can we move.
+	if (this->getToPlay() == SG_WHITE
+		&& (!legal(SG_WHITE, TofeMove(TofeMove::TOFE_UP))&&
+			!legal(SG_WHITE, TofeMove(TofeMove::TOFE_DOWN))&&
+			!legal(SG_WHITE, TofeMove(TofeMove::TOFE_LEFT))&&
+			!legal(SG_WHITE, TofeMove(TofeMove::TOFE_RIGHT)))) {
+		return true;
+	}
+	return false;
+}
+
+bool TofeGame::hasWin() {
+	// we can never win in 2048 since we are chasing a higher score
+	// only if we defeated by random
+	return endOfGame();
+}
+
+/** As for TofeGame, when random side, actually no random play.
+	All legal plays should be generated. But we can prune to 
+	accelerate. Maybe there is some other methos? */
+void TofeGame::generate(vector<TofeMove>& moves) {
+	moves.clear();
+	if (this->getToPlay() == SG_BLACK) {
+		for (auto it=getEmptyPoints().begin(); 
+			it != getEmptyPoints().end(); it++) {
+				moves.push_back(TofeMove(*it, 2));
+				moves.push_back(TofeMove(*it, 4));
+				//std::cout << *it << std::endl;
+		}
+	} else {
+		// if WHITE, only legal ones in four directions.
+		if (legal(SG_WHITE, TofeMove(TofeMove::TOFE_UP))) {
+			moves.push_back(TofeMove(TofeMove::TOFE_UP));
+			//std::cout << "TOFE_UP" << std::endl;
+		}
+		if (legal(SG_WHITE, TofeMove(TofeMove::TOFE_DOWN))) {
+			moves.push_back(TofeMove(TofeMove::TOFE_DOWN));
+			//std::cout << "TOFE_DOWN" << std::endl;
+		}
+		if (legal(SG_WHITE, TofeMove(TofeMove::TOFE_LEFT))) {
+			moves.push_back(TofeMove(TofeMove::TOFE_LEFT));
+			//std::cout << "TOFE_LEFT" << std::endl;
+		}
+		if (legal(SG_WHITE, TofeMove(TofeMove::TOFE_RIGHT))) {
+			moves.push_back(TofeMove(TofeMove::TOFE_RIGHT));
+			//std::cout << "TOFE_RIGHT" << std::endl; 
+		}
+	}
 }
 
 //----------------------------------------------------------------------------
