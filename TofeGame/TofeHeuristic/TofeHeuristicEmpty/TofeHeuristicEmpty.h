@@ -11,7 +11,9 @@ public:
 	/** return empty score of the current state,
 	which is the proportion of empty blocks of all blocks. */
 	double score() const override {
-		return (double)m_to_evaluate.getEmptyNum() / (double)m_to_evaluate.getGameSize();
+		return (m_to_evaluate.getToPlay() == SG_WHITE) ?
+		(double)m_to_evaluate.getEmptyNum() / (double)m_to_evaluate.getGameSize():
+		-((double)m_to_evaluate.getEmptyNum() / (double)m_to_evaluate.getGameSize());
 	}
 };
 

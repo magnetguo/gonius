@@ -41,5 +41,7 @@ double TofeHeuristicDiff::score() const {
 	int cols = m_to_evaluate.getCols(), rows = m_to_evaluate.getRows();
 	int num_diff = cols * (rows - 1) + rows * (cols - 1);
 	double max_diff = num_diff * log(m_to_evaluate.getMaxBlock());
-	return (max_diff - (double)diffSum()) / max_diff;
+	return (m_to_evaluate.getToPlay() == SG_WHITE) ?
+	(max_diff - (double)diffSum()) / max_diff :
+	-((max_diff - (double)diffSum()) / max_diff);
 }

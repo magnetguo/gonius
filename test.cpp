@@ -19,7 +19,7 @@ int main() {
 		game.print(cout);
 #endif
 
-	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 3);
+	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 2);
 	RandomSearch<TofeState, TofeMove>re(*game.copy());
 
 #ifdef HUMAN		
@@ -52,8 +52,8 @@ int main() {
 		if(!game.play(move)) continue;
 #endif	
 #ifdef TEST	
-		//TofeMove generate_move = se.generateMove();
-		TofeMove generate_move = re.generateMove();
+		TofeMove generate_move = se.generateMove();
+		//TofeMove generate_move = re.generateMove();
 		if (generate_move.isNullMove())
 			break;
 		game.play(TofeMove(generate_move.getMovement()));

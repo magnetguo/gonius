@@ -52,5 +52,7 @@ int TofeHeuristicReverse::getReverseSum(bool isCol) const {
 
 double TofeHeuristicReverse::score() const {
 	double reverse_sum = getReverseSum(true) + getReverseSum(false);
-	return ((reverse_sum - (double)reverseNum()) / reverse_sum);
+	return (m_to_evaluate.getToPlay() == SG_WHITE) ?
+	((reverse_sum - (double)reverseNum()) / reverse_sum)
+	: -((reverse_sum - (double)reverseNum()) / reverse_sum);
 }
