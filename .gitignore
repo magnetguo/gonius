@@ -7,3 +7,4 @@ gonius.vcxproj
 gonius.vcxproj.filters
 .vs/
 Debug/
+*.txt

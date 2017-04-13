@@ -17,14 +17,15 @@ public:
 		TOFE_UP,
 		TOFE_DOWN,
 		TOFE_LEFT,
-		TOFE_RIGHT
+		TOFE_RIGHT,
 	};
-	TofeMove() {}
+	TofeMove():m_nullmove(true) {}
 
 	/** construct with movement type */
 	TofeMove(Movement m) 
 	: m_movement(m)
 	, m_type_movement(true)
+	, m_nullmove(false)
 	{
 		assert(m>=TOFE_UP && m<=TOFE_RIGHT);
 	}
@@ -44,6 +45,10 @@ public:
 		return m_movement;
 	}
 
+	bool isNullMove() const {
+		return m_nullmove;
+	}
+
 	SgPoint getPoint() const {
 		return m_generation.first;
 	}
@@ -56,6 +61,7 @@ private:
 	Movement m_movement;
 	std::pair<SgPoint, int> m_generation;
 	bool m_type_movement;
+	bool m_nullmove;
 };
 
 /** Define the type of State of each point */

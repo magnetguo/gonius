@@ -174,7 +174,7 @@ bool TofeGame::hasWin() {
 
 /** As for TofeGame, when random side, actually no random play.
 	All legal plays should be generated. But we can prune to 
-	accelerate. Maybe there is some other methos? */
+	accelerate. Maybe there is some other methods? */
 void TofeGame::generate(vector<TofeMove>& moves) {
 	moves.clear();
 	if (this->getToPlay() == SG_BLACK) {

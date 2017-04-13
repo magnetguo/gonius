@@ -28,7 +28,7 @@ template<class State, class Move>
 double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, double beta, Move& best_move) {
 	std::vector<Move> moves;
 	getSnap().generate(moves);
-
+	
 	if (getSnap().hasWin())
 		return -DBL_INFINITY;
 
@@ -42,17 +42,21 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 	double local_alpha = alpha, best_value = -DBL_INFINITY;
 
 	for (size_t i = 0; i < moves.size(); ++i) {
+		std::cout << i << ": " << moves.size() << std::endl;
 		Move move = moves.at(i);
 		bool played = getSnap().play(move);
 		if (!played) break;
 		double value = -alphaBeta(depth - 1, -beta, -local_alpha, Move());
 		getSnap().takeback();
+		getSnap().switchToPlay();
 		if (value > best_value) {
 			best_value = value;
 			best_move = move;
 		}
-		if (best_value >= beta)
+		if (best_value >= beta) {
+			std::cout << "beta pruning" << std::endl;
 			break;
+		}		
 		if (best_value > local_alpha)
 			local_alpha = best_value;
 	}
