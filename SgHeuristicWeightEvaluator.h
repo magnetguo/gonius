@@ -17,8 +17,8 @@ public:
 	double score() const override {
 		double score = 0.0;
 		assert(!this->m_heuristics.empty());
-		for (size_t i=0; i != m_heuristics.size(); i++) {
-			score += m_heuristics[i]->score() * m_heuristic_weights[i];
+		for (size_t i=0; i != this->m_heuristics.size(); i++) {
+			score += this->m_heuristics[i]->score() * m_heuristic_weights[i];
 		}
 		return score;
 	}
