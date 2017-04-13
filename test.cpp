@@ -3,6 +3,7 @@
 #include "./Searchs/AlphaBetaSearch.h"
 #include "./Searchs/RandomSearch.h"
 #include <iostream>
+#include <random>
 
 using std::cout;
 using std::cin;
@@ -10,13 +11,15 @@ using std::endl;
 
 int main() {
 	TofeGame game(4, 4, SG_WHITE);
+	std::random_device rd;
+	std::uniform_int_distribution<int> uni(0, 1);
 
 	while (!game.endOfGame()) {
 #ifdef HUMAN		
 		game.print(cout);
 #endif
 
-	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 5);
+	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 3);
 	RandomSearch<TofeState, TofeMove>re(*game.copy());
 
 #ifdef HUMAN		
@@ -54,8 +57,12 @@ int main() {
 		if (generate_move.isNullMove())
 			break;
 		game.play(TofeMove(generate_move.getMovement()));
-#endif		
-		game.play(TofeMove(game.pickOneRandomEmptyPos(), 2));
+#endif	
+		int rand = uni(rd);	
+		if (rand == 0)
+			game.play(TofeMove(game.pickOneRandomEmptyPos(), 2));
+		else
+			game.play(TofeMove(game.pickOneRandomEmptyPos(), 4));
 	}
 #ifdef HUMAN	
 	cout << "end of game!" << endl;
