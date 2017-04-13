@@ -7,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include <random>
+#include <stack>
 
 //----------------------------------------------------------------------------
 /** Define the type move we will use in 2048 game. */
@@ -114,9 +115,9 @@ public:
 	TofeGame(const TofeGame& g)
 		: SgGame<TofeState, TofeMove>(g){
 		m_empty = g.m_empty;
-		m_last_empty = g.m_last_empty;
+		m_last_empty_stack = g.m_last_empty_stack;
 		m_max_block = g.m_max_block;
-		m_last_max_block = g.m_last_max_block;
+		m_last_max_block_stack = g.m_last_max_block_stack;
 	}
 
 	SgGame* copy() const override;
@@ -134,15 +135,18 @@ public:
 	void generate(std::vector<TofeMove>& moves) override;
 
 	void backup() override {
-		m_last_board = m_board;
-		m_last_empty = m_empty;
-		m_last_max_block = m_max_block;
+		m_last_board_stack.push(m_board);
+		m_last_empty_stack.push(m_empty);
+		m_last_max_block_stack.push(m_max_block);
 	}
 
 	void takeback() override {
-		m_board = m_last_board;
-		m_empty = m_last_empty;
-		m_max_block = m_last_max_block;
+		m_board = m_last_board_stack.top();
+		m_last_board_stack.pop();
+		m_empty = m_last_empty_stack.top();
+		m_last_empty_stack.pop();
+		m_max_block = m_last_max_block_stack.top();
+		m_last_max_block_stack.pop();
 	}
 
 	/** Utility to generate a random number from 0 to m_empty.size()-1 */
@@ -173,10 +177,10 @@ private:
 		As the frequent erase op in the vector, perhaps list is better,
 		but since the size of this vector is small, it's fine. */
 	std::vector<SgPoint> m_empty;
-	std::vector<SgPoint> m_last_empty;
+	std::stack<std::vector<SgPoint>> m_last_empty_stack;
 
 	int m_max_block;
-	int m_last_max_block;
+	std::stack<int> m_last_max_block_stack;
 
 	std::random_device rd;
 

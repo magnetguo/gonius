@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
+#include <stack>
 
 //----------------------------------------------------------------------------
 /** As for two side player games, we can define the color of both sides,
@@ -82,11 +83,12 @@ public:
       	Very important to restore the correct side-to-play as searches use this.
       	Returns whether or not the take back was successful. */
   	virtual void takeback() {
-  		m_board = m_last_board;
+  		m_board = m_last_board_stack.top();
+  		m_last_board_stack.pop();
   	}
 
 	virtual void backup() {
-		m_last_board = m_board;
+		m_last_board_stack.push(m_board);
 	}
 
   	/** Returns whether or not the game is over. */
@@ -163,7 +165,7 @@ protected:
 	std::vector<State> m_board;
 
 	/** the board of next step. */
-	std::vector<State> m_last_board;
+	std::stack<std::vector<State> > m_last_board_stack;
 
 private:
 	/** the rows and cols of the board, the actual part. */

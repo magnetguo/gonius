@@ -32,8 +32,12 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 	if (this->getSnap().hasWin())
 		return -DBL_INFINITY;
 
-	if (depth == 0)
+	if (depth == 0) {
+#ifdef DEBUG
+		std::cout << "evaluate!" << std::endl;
+#endif
 		return this->getSnap().evaluate();
+	}
 
 	if (moves.size() == 0 || this->getSnap().endOfGame()) {
 		return 0;
@@ -43,11 +47,17 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 
 	for (size_t i = 0; i < moves.size(); ++i) {
 #ifdef DEBUG
-		std::cout << i << ": " << moves.size() << std::endl;
+		std::cout << depth << "->" << i << ": " << moves.size() << std::endl;
 #endif
 		Move move = moves.at(i);
 		bool played = this->getSnap().play(move);
-		if (!played) break;
+		if (!played) {
+#ifdef DEBUG
+		std::cout << "playing: "<< this->getSnap().getToPlay() << std::endl;
+		std::cout << "break!" << std::endl;
+#endif
+			break;
+		}
 
 		Move nullmove = Move();
 		double value = -alphaBeta(depth - 1, -beta, -local_alpha, nullmove);

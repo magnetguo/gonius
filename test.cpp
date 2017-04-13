@@ -15,11 +15,11 @@ int main() {
 	std::uniform_int_distribution<int> uni(0, 1);
 
 	while (!game.endOfGame()) {
-#ifdef HUMAN		
+#ifdef DEBUG		
 		game.print(cout);
 #endif
 
-	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 2);
+	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 5);
 	RandomSearch<TofeState, TofeMove>re(*game.copy());
 
 #ifdef HUMAN		

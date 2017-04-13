@@ -2,6 +2,7 @@
 #include "../SgHeuristicAverageEvaluator.h"
 #include "../SgHeuristicWeightEvaluator.h"
 #include "./TofeHeuristic/TofeHeuristicFactory.h"
+#include <algorithm>
 
 //----------------------------------------------------------------------------
 
@@ -22,8 +23,13 @@ TofeGame::TofeGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay)
 	}
 
 	// then we pick 2 random position and put a 2 and 4 on them
-	setState(pickOneRandomEmptyPos(), TofeState(SG_WHITE, 2));
-	setState(pickOneRandomEmptyPos(), TofeState(SG_WHITE, 4));
+	SgPoint rp = pickOneRandomEmptyPos();
+	setState(rp, TofeState(SG_WHITE, 2));
+	m_empty.erase(std::find(m_empty.begin(), m_empty.end(), rp));
+
+	rp = pickOneRandomEmptyPos();
+	setState(rp, TofeState(SG_WHITE, 4));
+	m_empty.erase(std::find(m_empty.begin(), m_empty.end(), rp));
 
 	m_max_block = 4;
 }
@@ -34,7 +40,6 @@ SgPoint TofeGame::pickOneRandomEmptyPos() {
 	int rand = uni(rd);
 	SgPoint pos = m_empty[rand];
 	//std::cout << pos << std::endl;
-	m_empty.erase(m_empty.begin()+rand);
 	return pos;
 }
 
@@ -135,9 +140,11 @@ bool TofeGame::legal(SgBlackWhite color, TofeMove move) {
 bool TofeGame::play(SgBlackWhite color, TofeMove move) {
 	if (legal(color, move)) {
 	//if (true) {
-		if (color == SG_BLACK)
-			/** We can have a random 2 or 4 in the future */
-			setState(move.getPoint(), TofeState(SG_WHITE, move.getValue())); 
+		if (color == SG_BLACK) {
+			backup();
+			setState(move.getPoint(), TofeState(SG_WHITE, move.getValue()));
+			m_empty.erase(std::find(m_empty.begin(), m_empty.end(), move.getPoint()));
+		}
 		else{
 			toMove(move.getMovement());
 		}
@@ -154,7 +161,7 @@ double TofeGame::evaluate() const {
 	SgHeuristicWeightEvaluator<TofeGame, TofeHeuristicFactory>
 		hw_evaluator = SgHeuristicWeightEvaluator<TofeGame, TofeHeuristicFactory>
 		(vector<string>{"HeuristicDiff", "HeuristicEmpty", "HeuristicReverse"},
-			vector<double>{0.2, 0.5, 0.3}, *this);
+			vector<double>{0.05, 0.8, 0.15}, *this);
 
 	return hw_evaluator.score();
 }
@@ -184,8 +191,8 @@ bool TofeGame::hasWin() {
 void TofeGame::generate(vector<TofeMove>& moves) {
 	moves.clear();
 	if (this->getToPlay() == SG_BLACK) {
-		for (auto it=getEmptyPoints().begin(); 
-			it != getEmptyPoints().end(); it++) {
+		for (auto it=m_empty.begin(); 
+			it != m_empty.end(); it++) {
 				moves.push_back(TofeMove(*it, 2));
 				moves.push_back(TofeMove(*it, 4));
 				//std::cout << *it << std::endl;
