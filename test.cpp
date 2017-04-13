@@ -1,5 +1,6 @@
 #include "./TofeGame/TofeGame.h"
 #include "./TofeGame/TofeHeuristic/TofeHeuristic.h"
+#include "Searchs/AlphaBetaSearch.h"
 #include <iostream>
 
 using std::cout;
@@ -13,8 +14,20 @@ int main() {
 	while (!game.endOfGame()) {
 		game.print(cout);
 		std::vector<TofeMove> moves;
-		//game.generate(moves);
-
+		game.generate(moves);
+		AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 7);
+		switch (se.generateMove().getMovement()) {
+		case TofeMove::TOFE_UP:
+			cout << "TOFE_UP" << endl; break;
+		case TofeMove::TOFE_DOWN:
+			cout << "TOFE_DOWN" << endl; break;
+		case TofeMove::TOFE_LEFT:
+			cout << "TOFE_LEFT" << endl; break;
+		case TofeMove::TOFE_RIGHT:
+			cout << "TOFE_RIGHT" << endl; break;
+		default:
+			cout << "No recommendation!" << endl;
+		}
 		cout << game.evaluate() << endl;
 		cin >> m;
 		if (m == 'w')

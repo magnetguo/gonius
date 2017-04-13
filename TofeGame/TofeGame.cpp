@@ -37,6 +37,11 @@ SgPoint TofeGame::pickOneRandomEmptyPos() {
 	return pos;
 }
 
+SgGame<TofeState, TofeMove>* TofeGame::copy() const {
+	SgGame<TofeState, TofeMove>* p_copy_game = new TofeGame(*this);
+	return p_copy_game;
+}
+
 bool TofeGame::toMove(TofeMove::Movement m) {
 	int m_int = static_cast<int>(m);
 	bool changed = false;

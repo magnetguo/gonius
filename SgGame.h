@@ -41,7 +41,13 @@ class SgGame {
 public:
 	SgGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay);
 
+	SgGame() = default;
+
+	SgGame(const SgGame& g) = default;
+
 	virtual ~SgGame() {}
+
+	virtual SgGame* copy() const = 0;
 
 	/** Plays a move.
 		For turn-based games, plays the move for the current side to play and

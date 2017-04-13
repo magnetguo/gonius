@@ -101,7 +101,19 @@ bool operator==(const TofeState &&lhs, const TofeState &&rhs);
 //----------------------------------------------------------------------------
 class TofeGame : public SgGame<TofeState, TofeMove> {
 public:
+	TofeGame() = default;
+
 	TofeGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay);
+
+	TofeGame(const TofeGame& g)
+		: SgGame<TofeState, TofeMove>(g){
+		m_empty = g.m_empty;
+		m_last_empty = g.m_last_empty;
+		m_max_block = g.m_max_block;
+		m_last_max_block = g.m_last_max_block;
+	}
+
+	SgGame* copy() const override;
 
 	bool play(SgBlackWhite color, TofeMove move) override;
 
@@ -148,6 +160,7 @@ public:
 		we only need add this-> */
 	using SgGame<TofeState, TofeMove>::print;
 	using SgGame<TofeState, TofeMove>::play;
+	using SgGame<TofeState, TofeMove>::SgGame;
 private:
 	/** The storage of still empty point,
 		used for random.
