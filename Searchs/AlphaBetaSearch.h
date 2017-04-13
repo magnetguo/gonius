@@ -12,7 +12,7 @@ public:
 	AlphaBetaSearch(SgGame<State, Move>& game,
 					int depth = DEFAULT_DEPTH,
 					double alpha = -DBL_INFINITY, double beta = DBL_INFINITY)
-		: SgSearch(game), m_depth(depth), m_alpha(alpha), m_beta(beta) {}
+		: SgSearch<State, Move>(game), m_depth(depth), m_alpha(alpha), m_beta(beta) {}
 	
 	inline Move generateMove();
 private:
@@ -27,34 +27,40 @@ private:
 template<class State, class Move>
 double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, double beta, Move& best_move) {
 	std::vector<Move> moves;
-	getSnap().generate(moves);
+	this->getSnap().generate(moves);
 	
-	if (getSnap().hasWin())
+	if (this->getSnap().hasWin())
 		return -DBL_INFINITY;
 
 	if (depth == 0)
-		return getSnap().evaluate();
+		return this->getSnap().evaluate();
 
-	if (moves.size() == 0 || getSnap().endOfGame()) {
+	if (moves.size() == 0 || this->getSnap().endOfGame()) {
 		return 0;
 	}
 
 	double local_alpha = alpha, best_value = -DBL_INFINITY;
 
 	for (size_t i = 0; i < moves.size(); ++i) {
+#ifdef DEBUG
 		std::cout << i << ": " << moves.size() << std::endl;
+#endif
 		Move move = moves.at(i);
-		bool played = getSnap().play(move);
+		bool played = this->getSnap().play(move);
 		if (!played) break;
-		double value = -alphaBeta(depth - 1, -beta, -local_alpha, Move());
-		getSnap().takeback();
-		getSnap().switchToPlay();
+
+		Move nullmove = Move();
+		double value = -alphaBeta(depth - 1, -beta, -local_alpha, nullmove);
+		this->getSnap().takeback();
+		this->getSnap().switchToPlay();
 		if (value > best_value) {
 			best_value = value;
 			best_move = move;
 		}
 		if (best_value >= beta) {
+#ifdef DEBUG
 			std::cout << "beta pruning" << std::endl;
+#endif
 			break;
 		}		
 		if (best_value > local_alpha)

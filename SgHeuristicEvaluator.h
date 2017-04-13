@@ -47,9 +47,11 @@ public:
 	/** Offered to concrete heuristic factory for registering them. */
 	static string registerFactory(string heuristic_id, FactoryType* rf) {
 		getFactoryMap().insert(std::make_pair(heuristic_id, rf));
+#ifdef DEBUG		
 		std::cout << "has registerd" << std::endl;
 		std::cout << heuristic_id << std::endl;
 		std::cout << getFactoryMap().size() << std::endl;
+#endif
 		return heuristic_id;
 	}
 protected:

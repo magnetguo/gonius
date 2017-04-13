@@ -2,7 +2,7 @@ test: test.o TofeGame.o TofeHeuristicEmptyFactory.o TofeHeuristicDiffFactory.o T
 	g++ -o test test.o TofeGame.o TofeHeuristicEmptyFactory.o TofeHeuristicDiffFactory.o TofeHeuristicReverseFactory.o TofeHeuristicDiff.o TofeHeuristicReverse.o -std=C++11
 
 test.o: test.cpp
-	g++ -c test.cpp -std=c++11
+	g++ -c test.cpp -std=c++11 -DTEST
 
 TofeHeuristicEmptyFactory.o: ./TofeGame/TofeHeuristic/TofeHeuristicEmpty/TofeHeuristicEmptyFactory.cpp
 	g++ -c ./TofeGame/TofeHeuristic/TofeHeuristicEmpty/TofeHeuristicEmptyFactory.cpp -std=c++11
