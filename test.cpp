@@ -1,6 +1,7 @@
 #include "./TofeGame/TofeGame.h"
 #include "./TofeGame/TofeHeuristic/TofeHeuristic.h"
 #include "./Searchs/AlphaBetaSearch.h"
+#include "./Searchs/RandomSearch.h"
 #include <iostream>
 
 using std::cout;
@@ -16,6 +17,7 @@ int main() {
 #endif
 
 	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 5);
+	RandomSearch<TofeState, TofeMove>re(*game.copy());
 
 #ifdef HUMAN		
 		/** recommendation module, for human interface */
@@ -47,7 +49,8 @@ int main() {
 		if(!game.play(move)) continue;
 #endif	
 #ifdef TEST	
-		TofeMove generate_move = se.generateMove();
+		//TofeMove generate_move = se.generateMove();
+		TofeMove generate_move = re.generateMove();
 		if (generate_move.isNullMove())
 			break;
 		game.play(TofeMove(generate_move.getMovement()));
