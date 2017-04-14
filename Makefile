@@ -1,5 +1,6 @@
 test: test.o TofeGame.o TofeHeuristicEmptyFactory.o TofeHeuristicDiffFactory.o TofeHeuristicReverseFactory.o TofeHeuristicDiff.o TofeHeuristicReverse.o
 	g++ -o test test.o TofeGame.o TofeHeuristicEmptyFactory.o TofeHeuristicDiffFactory.o TofeHeuristicReverseFactory.o TofeHeuristicDiff.o TofeHeuristicReverse.o -std=C++11
+	mv test ./DoTest
 
 test.o: test.cpp
 	g++ -c test.cpp -std=c++11 -DTEST

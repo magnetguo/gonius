@@ -75,8 +75,7 @@ int main() {
 	cout << "the max is " << game.getMaxBlock() << endl;
 #endif
 #ifdef TEST
-	cout << game.getMaxBlock() << endl;
-	cout << duration_all <<"ms"<< endl;
+	cout << game.getMaxBlock()<< "\t" << duration_all << endl;
 #endif
 	return 0;
 }
