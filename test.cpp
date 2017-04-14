@@ -22,7 +22,7 @@ int main() {
 		game.print(cout);
 #endif
 
-	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 5);
+	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 3);
 	RandomSearch<TofeState, TofeMove>re(*game.copy());
 
 #ifdef HUMAN		

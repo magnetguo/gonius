@@ -25,9 +25,9 @@ protected:
 	SgGame<State, Move>& getSnap() {
 		return m_snap;
 	}
+	Timer t;
 private:
 	SgGame<State, Move>& m_snap;
-	Timer t;
 
 	/** not implemented to prevent copying. */
 	SgSearch(const SgSearch&);
