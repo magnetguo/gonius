@@ -5,6 +5,8 @@
 #include <iostream>
 #include <random>
 
+#define TEST
+
 using std::cout;
 using std::cin;
 using std::endl;

@@ -2,6 +2,21 @@
 #include "TofeHeuristicReverse.h"
 #include <map>
 
+const int MAX_LOG = 30;
+
+int log2(int to_log) {
+	// find the first right 1 of to_log, as to_log is the power of 2
+	assert(to_log >= 0);
+	if (to_log == 0)
+		return 0;
+	int log = 1;
+	while ((to_log & 1) != 1) {
+		log++;
+		to_log >>= 1;
+	}
+	return to_log;
+}
+
 int TofeHeuristicReverse::reverseCalc(TofeMove::Movement m) const {
 	int m_int = static_cast<int>(m);
 	SgGrid cols = m_to_evaluate.getCols(), rows = m_to_evaluate.getRows();
@@ -11,22 +26,20 @@ int TofeHeuristicReverse::reverseCalc(TofeMove::Movement m) const {
 	int change = (m_int % 2 == 1) ? -1 : 1;
 
 	int reverse_num = 0;
-	std::map<int, int> mp_statics;
+	int mp_statics[MAX_LOG] = {0};
 	for (SgGrid m = 1; m <= outer_end; m++) {
 		for (SgGrid n = inner_start; n != inner_end + change; n += change) {
 			SgPoint p = (m_int < 2) ? m_to_evaluate.getPt(m, n) : m_to_evaluate.getPt(n, m);
 			// update num_p
-			if (mp_statics.find(m_to_evaluate.getState(p).getValue()) != mp_statics.end())
-				mp_statics.insert(std::make_pair(m_to_evaluate.getState(p).getValue(), 1));
-			else
-				mp_statics[m_to_evaluate.getState(p).getValue()]++;
+			mp_statics[log2(m_to_evaluate.getState(p).getValue())]++;
 
 			// update reverse number
-			for (auto it = mp_statics.upper_bound(m_to_evaluate.getState(p).getValue());
-				it != mp_statics.end(); it = mp_statics.upper_bound(it->first))
-				reverse_num += it->second;
+			for (auto it = (log2(m_to_evaluate.getState(p).getValue()))+1;
+				it != MAX_LOG; it ++)
+				reverse_num += mp_statics[it];
 		}
-		mp_statics.clear();
+		// here for speed, we use C style memset
+		memset(mp_statics, 0x0, 30 * sizeof(int));
 	}
 	return reverse_num;
 }
