@@ -16,12 +16,14 @@ private:
 //----------------------------------------------------------------------------
 template<class State, class Move>
 Move RandomSearch<State, Move>::generateMove() {
+	t.start();
 	std::vector<Move> moves;
 	this->getSnap().generate(moves);
 	if (moves.empty())
 		return Move();
 	std::uniform_int_distribution<int> uni(0, moves.size() - 1);
 	int rand = uni(rd);
+	t.end();
 	return moves.at(rand);
 }
 

@@ -13,6 +13,9 @@ int main() {
 	TofeGame game(4, 4, SG_WHITE);
 	std::random_device rd;
 	std::uniform_int_distribution<int> uni(0, 1);
+#ifdef TEST	
+	double duration_all = 0;
+#endif
 
 	while (!game.endOfGame()) {
 #ifdef DEBUG		
@@ -53,6 +56,7 @@ int main() {
 #endif	
 #ifdef TEST	
 		TofeMove generate_move = se.generateMove();
+		duration_all += se.getSerachDuration();
 		//TofeMove generate_move = re.generateMove();
 		if (generate_move.isNullMove())
 			break;
@@ -70,6 +74,7 @@ int main() {
 #endif
 #ifdef TEST
 	cout << game.getMaxBlock() << endl;
+	cout << duration_all <<"ms"<< endl;
 #endif
 	return 0;
 }

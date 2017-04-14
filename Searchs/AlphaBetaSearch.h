@@ -82,8 +82,12 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 
 template<class State, class Move>
 Move AlphaBetaSearch<State, Move>::generateMove() {
+	t.start();
+
 	Move move;
 	double value = alphaBeta(m_depth, m_alpha, m_beta, move);
+	
+	t.end();
 	return move;
 }
 
