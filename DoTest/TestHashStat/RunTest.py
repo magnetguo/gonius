@@ -21,6 +21,7 @@ if __name__  == "__main__":
         for i in range(games):
     	    print ("depth:"+str(d+1)+"run test:" + str(i+1) + "/" + str(games))
             result += run_test(i, d+1)
+            result += "\n"
         print >> f, result
         f.close()
     

@@ -31,7 +31,8 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 	if (this->getHash()) {
 		ABSearchHashData<Move> hash_data;
 		if (this->getHash()->lookup(this->getSnap().getHashCode(), hash_data)
-			&& hash_data.getDepth() >= depth) {
+			&& hash_data.getDepth() >= depth
+			&& hash_data.getToPlay() == this->getSnap().getToPlay()) {
 			if (hash_data.isExactValue()) {
 				best_move = hash_data.getBestMove();
 				return -hash_data.getValue();
@@ -91,13 +92,14 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 	}
 	if (this->getHash()) {
 		bool is_upper_bound = false, is_lower_bound = false, is_exact_value = false;
+		SgBlackWhite to_play = this->getSnap().getToPlay();
 		if (best_value >= beta)
 			is_upper_bound = true;
 		else if (best_value <= local_alpha)
 			is_lower_bound = true;
 		else
 			is_exact_value = true;
-		ABSearchHashData<Move> new_data(depth, best_value, best_move, is_upper_bound, is_lower_bound, is_exact_value);
+		ABSearchHashData<Move> new_data(to_play, depth, best_value, best_move, is_upper_bound, is_lower_bound, is_exact_value);
 		this->getHash()->store(this->getSnap().getHashCode(), new_data);
 	}
 	return best_value;

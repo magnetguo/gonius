@@ -2,6 +2,7 @@
 #define ALPHA_BETA_SEARCH_HASH_DATA_H
 
 #include <algorithm>
+#include "../SgGame.h"
 //----------------------------------------------------------------------------
 /** Hash data used in search. */
 template<class Move>
@@ -9,7 +10,7 @@ class ABSearchHashData {
 public:
 	ABSearchHashData();
 
-	ABSearchHashData(int depth, double value, Move best_move,
+	ABSearchHashData(SgBlackWhite to_play, int depth, double value, Move best_move,
 		bool is_only_upper_bound = false,
 		bool is_only_lower_bound = false,
 		bool is_exact_value = false);
@@ -56,6 +57,10 @@ public:
 		m_depth = 0;
 	}
 
+	SgBlackWhite getToPlay() const {
+		return m_to_play;
+	}
+
 	bool operator==(const ABSearchHashData& other) const;
 
 	bool operator!=(const ABSearchHashData& other) const;
@@ -66,6 +71,7 @@ private:
 	bool m_is_lower_bound;
 	bool m_is_valid;
 	bool m_is_exact_value;
+	SgBlackWhite m_to_play;
 	double m_value;
 	Move m_best_move;
 };
@@ -79,15 +85,18 @@ ABSearchHashData<Move>::ABSearchHashData()
 	m_is_valid(false),
 	m_is_exact_value(false),
 	m_value(-1),
+	m_to_play(SG_EMPTY),
 	m_best_move() {} // all Move type default constructed as NULLMOVE
 
 template<class Move>
-ABSearchHashData<Move>::ABSearchHashData(int depth, double value,
+ABSearchHashData<Move>::ABSearchHashData(SgBlackWhite to_play, 
+	int depth, double value,
 	Move best_move,
 	bool is_only_upper_bound,
 	bool is_only_lower_bound,
 	bool is_exact_value)
-	: m_depth(depth),
+	: m_to_play(to_play),
+	m_depth(depth),
 	m_is_upper_bound(is_only_upper_bound),
 	m_is_lower_bound(is_only_lower_bound),
 	m_is_valid(true),
