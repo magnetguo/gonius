@@ -4,6 +4,7 @@
 #include "./Searchs/RandomSearch.h"
 #include <iostream>
 #include <random>
+#include <string>
 
 #define TEST
 
@@ -11,10 +12,11 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-int main() {
+int main(int argc, char const *argv[]) {
 	TofeGame game(4, 4, SG_WHITE);
 	std::random_device rd;
 	std::uniform_int_distribution<int> uni(0, 1);
+	int depth = std::stoi(argv[1]);
 #ifdef TEST	
 	double duration_all = 0;
 #endif
@@ -24,8 +26,8 @@ int main() {
 		game.print(cout);
 #endif
 
-	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 3);
-	RandomSearch<TofeState, TofeMove>re(*game.copy());
+	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), depth);
+	//RandomSearch<TofeState, TofeMove>re(*game.copy());
 
 #ifdef HUMAN		
 		/** recommendation module, for human interface */
