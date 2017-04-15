@@ -16,18 +16,18 @@ int main(int argc, char const *argv[]) {
 	TofeGame game(4, 4, SG_WHITE);
 	std::random_device rd;
 	std::uniform_int_distribution<int> uni(0, 1);
-	int depth = std::stoi(argv[1]);
+	//int depth = std::stoi(argv[1]);
 #ifdef TEST	
 	double duration_all = 0;
 #endif
+	SgHashTable<ABSearchHashData<TofeMove>>* hash = new SgHashTable<ABSearchHashData<TofeMove>>();
 
 	while (!game.endOfGame()) {
 #ifdef DEBUG		
 		game.print(cout);
 #endif
 
-	AlphaBetaSearch<TofeState, TofeMove>
-	se(*game.copy(), depth, new SgHashTable<ABSearchHashData<TofeMove> >());
+	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 3, hash);
 
 #ifdef HUMAN		
 		/** recommendation module, for human interface */
@@ -72,6 +72,8 @@ int main(int argc, char const *argv[]) {
 		else
 			game.play(TofeMove(game.pickOneRandomEmptyPos(), 4));
 	}
+	if (hash)
+		delete hash;
 #ifdef HUMAN	
 	cout << "end of game!" << endl;
 	cout << "the max is " << game.getMaxBlock() << endl;

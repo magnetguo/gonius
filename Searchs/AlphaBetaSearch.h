@@ -14,7 +14,7 @@ public:
 					int depth = DEFAULT_DEPTH,
 					SgHashTable<ABSearchHashData<Move>>* hash = 0,
 					double alpha = -DBL_INFINITY, double beta = DBL_INFINITY)
-		: SgSearch<State, Move, ABSearchHashData<Move> >(game), m_depth(depth), m_alpha(alpha), m_beta(beta) {}
+		: SgSearch<State, Move, ABSearchHashData<Move> >(game, hash), m_depth(depth), m_alpha(alpha), m_beta(beta) {}
 	
 	inline Move generateMove();
 private:

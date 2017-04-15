@@ -9,7 +9,7 @@ class ABSearchHashData {
 public:
 	ABSearchHashData();
 
-	ABSearchHashData(int depth, float value, Move best_move,
+	ABSearchHashData(int depth, double value, Move best_move,
 		bool is_only_upper_bound = false,
 		bool is_only_lower_bound = false,
 		bool is_exact_value = false);
@@ -82,7 +82,7 @@ ABSearchHashData<Move>::ABSearchHashData()
 	m_best_move() {} // all Move type default constructed as NULLMOVE
 
 template<class Move>
-ABSearchHashData<Move>::ABSearchHashData(int depth, float value,
+ABSearchHashData<Move>::ABSearchHashData(int depth, double value,
 	Move best_move,
 	bool is_only_upper_bound,
 	bool is_only_lower_bound,

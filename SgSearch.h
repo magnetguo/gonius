@@ -11,7 +11,7 @@ const double DBL_INFINITY = std::numeric_limits<double>::infinity();
 template<class State, class Move, class DATA>
 class SgSearch {
 public:
-	SgSearch(SgGame<State, Move>& s) : m_snap(s) { }
+	SgSearch(SgGame<State, Move>& s, SgHashTable<DATA>* hash) : m_snap(s), m_hash(hash) { }
 
 	double getSerachDuration() const {
 		return t.getDuration();
