@@ -2,6 +2,7 @@
 #include "./TofeGame/TofeHeuristic/TofeHeuristic.h"
 #include "./Searchs/AlphaBetaSearch.h"
 #include "./Searchs/RandomSearch.h"
+#include "SgHashTable.h"
 #include <iostream>
 #include <random>
 #include <string>
@@ -20,7 +21,9 @@ int main(int argc, char const *argv[]) {
 #ifdef TEST	
 	double duration_all = 0;
 #endif
-	SgHashTable<ABSearchHashData<TofeMove>>* hash = new SgHashTable<ABSearchHashData<TofeMove>>();
+	SgHashStatistics* stat = new SgHashStatistics();
+	SgHashTable<ABSearchHashData<TofeMove>>* hash 
+	= new SgHashTable<ABSearchHashData<TofeMove>>(stat);
 
 	while (!game.endOfGame()) {
 #ifdef DEBUG		
@@ -72,8 +75,6 @@ int main(int argc, char const *argv[]) {
 		else
 			game.play(TofeMove(game.pickOneRandomEmptyPos(), 4));
 	}
-	if (hash)
-		delete hash;
 #ifdef HUMAN	
 	cout << "end of game!" << endl;
 	cout << "the max is " << game.getMaxBlock() << endl;
@@ -81,5 +82,10 @@ int main(int argc, char const *argv[]) {
 #ifdef TEST
 	cout << game.getMaxBlock()<< "\t" << duration_all << endl;
 #endif
+#ifdef STAT
+	cout << *stat;
+#endif
+	if (hash)
+		delete hash;
 	return 0;
 }
