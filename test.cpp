@@ -26,8 +26,8 @@ int main(int argc, char const *argv[]) {
 		game.print(cout);
 #endif
 
-	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), depth);
-	//RandomSearch<TofeState, TofeMove>re(*game.copy());
+	AlphaBetaSearch<TofeState, TofeMove>
+	se(*game.copy(), depth, new SgHashTable<ABSearchHashData<TofeMove> >());
 
 #ifdef HUMAN		
 		/** recommendation module, for human interface */

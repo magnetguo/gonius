@@ -25,7 +25,7 @@ struct SgHashEntry {
 template<class DATA>
 class SgHashTable {
 public:
-	explicit SgHashTable(int max_hash, int num_pieces);
+	explicit SgHashTable(int max_hash = DEFAULT_HASHSIZE);
 
 	/** Copy constructor. */
 	SgHashTable(const SgHashTable&);
@@ -59,9 +59,9 @@ private:
 };
 
 template<class DATA>
-SgHashTable<DATA>::SgHashTable(int max_hash, int num_pieces)
+SgHashTable<DATA>::SgHashTable(int max_hash)
 	: m_entry(0), m_max_hash(max_hash) {
-	m_entry = new SgHashTable<DATA>[m_max_hash];
+	m_entry = new SgHashEntry<DATA>[m_max_hash];
 	clear();
 }
 
@@ -88,7 +88,7 @@ void SgHashTable<DATA>::age() {
 template<class DATA>
 void SgHashTable<DATA>::clear() {
 	for (int i = m_max_hash - 1; i >= 0; --i) {
-		m_entry[i].m_data..invalidate();
+		m_entry[i].m_data.invalidate();
 	}
 }
 

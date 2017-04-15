@@ -7,7 +7,7 @@ template<class State, class Move, class DATA>
 class RandomSearch : public SgSearch<State, Move, DATA> {
 public:
 	RandomSearch(SgGame<State, Move>& game)
-		: SgSearch<State, Move>(game) { }
+		: SgSearch<State, Move, DATA>(game) { }
 	inline Move generateMove();
 
 private:
