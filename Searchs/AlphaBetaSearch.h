@@ -12,9 +12,11 @@ class AlphaBetaSearch : public SgSearch<State, Move, ABSearchHashData<Move> > {
 public:
 	AlphaBetaSearch(SgGame<State, Move>& game,
 					int depth = DEFAULT_DEPTH,
-					SgHashTable<ABSearchHashData<Move>>* hash = 0,
+					SgHashTable<ABSearchHashData<Move>>* black_hash = 0,
+					SgHashTable<ABSearchHashData<Move>>* white_hash = 0,
 					double alpha = -DBL_INFINITY, double beta = DBL_INFINITY)
-		: SgSearch<State, Move, ABSearchHashData<Move> >(game, hash), m_depth(depth), m_alpha(alpha), m_beta(beta) {}
+		: SgSearch<State, Move, ABSearchHashData<Move> >(game, black_hash, white_hash)
+		, m_depth(depth), m_alpha(alpha), m_beta(beta) {}
 	
 	inline Move generateMove();
 private:
@@ -28,16 +30,28 @@ private:
 //----------------------------------------------------------------------------
 template<class State, class Move>
 double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, double beta, Move& best_move) {
-	if (this->getHash()) {
+	if (this->getBlackHash() && this->getWhiteHash()) {
 		ABSearchHashData<Move> hash_data;
-		if (this->getHash()->lookup(this->getSnap().getHashCode(), hash_data)
-			&& hash_data.getDepth() >= depth
-			&& hash_data.getToPlay() == this->getSnap().getToPlay()) {
-			if (hash_data.isExactValue()) {
-				best_move = hash_data.getBestMove();
-				return -hash_data.getValue();
-			} else
-				hash_data.adjustBounds(alpha, beta);
+		if (this->getSnap().getToPlay() == SG_BLACK) {
+			if (this->getBlackHash()->lookup(this->getSnap().getHashCode(), 
+				hash_data)
+			&& hash_data.getDepth() >= depth) {
+				if (hash_data.isExactValue()) {
+					best_move = hash_data.getBestMove();
+					return -hash_data.getValue();
+				} else
+					hash_data.adjustBounds(alpha, beta);
+			}
+		} else {
+			if (this->getWhiteHash()->lookup(this->getSnap().getHashCode(), 
+				hash_data)
+			&& hash_data.getDepth() >= depth) {
+				if (hash_data.isExactValue()) {
+					best_move = hash_data.getBestMove();
+					return -hash_data.getValue();
+				} else
+					hash_data.adjustBounds(alpha, beta);
+			}
 		}
 	}
 	std::vector<Move> moves;
@@ -90,7 +104,7 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 		if (best_value > local_alpha)
 			local_alpha = best_value;
 	}
-	if (this->getHash()) {
+	if (this->getBlackHash() && this->getWhiteHash()) {
 		bool is_upper_bound = false, is_lower_bound = false, is_exact_value = false;
 		SgBlackWhite to_play = this->getSnap().getToPlay();
 		if (best_value >= beta)
@@ -99,8 +113,13 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 			is_lower_bound = true;
 		else
 			is_exact_value = true;
-		ABSearchHashData<Move> new_data(to_play, depth, best_value, best_move, is_upper_bound, is_lower_bound, is_exact_value);
-		this->getHash()->store(this->getSnap().getHashCode(), new_data);
+		ABSearchHashData<Move> new_data(depth, best_value, best_move, is_upper_bound, is_lower_bound, is_exact_value);
+		
+		if (to_play == SG_BLACK) {
+			this->getBlackHash()->store(this->getSnap().getHashCode(), new_data);
+		} else {
+			this->getWhiteHash()->store(this->getSnap().getHashCode(), new_data);
+		}
 	}
 	return best_value;
 }

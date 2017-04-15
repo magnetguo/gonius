@@ -11,14 +11,23 @@ const double DBL_INFINITY = std::numeric_limits<double>::infinity();
 template<class State, class Move, class DATA>
 class SgSearch {
 public:
-	SgSearch(SgGame<State, Move>& s, SgHashTable<DATA>* hash) : m_snap(s), m_hash(hash) { }
+	SgSearch(SgGame<State, Move>& s, 
+		SgHashTable<DATA>* black_hash, 
+		SgHashTable<DATA>* white_hash) 
+	: m_snap(s), 
+	m_black_hash(black_hash),
+	m_white_hash(white_hash) { }
 
 	double getSerachDuration() const {
 		return t.getDuration();
 	}
 
-	SgHashTable<DATA>* getHash() {
-		return m_hash;
+	SgHashTable<DATA>* getBlackHash() {
+		return m_black_hash;
+	}
+
+	SgHashTable<DATA>* getWhiteHash() {
+		return m_white_hash;
 	}
 
 	virtual ~SgSearch() {
@@ -34,7 +43,9 @@ protected:
 private:
 	SgGame<State, Move>& m_snap;
 
-	SgHashTable<DATA>* m_hash;
+	SgHashTable<DATA>* m_black_hash;
+
+	SgHashTable<DATA>* m_white_hash;
 
 	/** not implemented to prevent copying. */
 	SgSearch(const SgSearch&);

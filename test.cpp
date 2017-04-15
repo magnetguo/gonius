@@ -21,16 +21,20 @@ int main(int argc, char const *argv[]) {
 #ifdef TEST	
 	double duration_all = 0;
 #endif
-	SgHashStatistics* stat = new SgHashStatistics();
-	SgHashTable<ABSearchHashData<TofeMove>>* hash 
-	= new SgHashTable<ABSearchHashData<TofeMove>>(stat);
+	SgHashStatistics* black_stat = new SgHashStatistics();
+	SgHashStatistics* white_stat = new SgHashStatistics();
+	SgHashTable<ABSearchHashData<TofeMove>>* black_hash 
+	= new SgHashTable<ABSearchHashData<TofeMove>>(black_stat);
+	SgHashTable<ABSearchHashData<TofeMove>>* white_hash 
+	= new SgHashTable<ABSearchHashData<TofeMove>>(white_stat);
 
 	while (!game.endOfGame()) {
 #ifdef DEBUG		
 		game.print(cout);
 #endif
 
-	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), depth, hash);
+	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 
+		depth, black_hash, white_hash);
 
 #ifdef HUMAN		
 		/** recommendation module, for human interface */
@@ -83,9 +87,16 @@ int main(int argc, char const *argv[]) {
 	cout << game.getMaxBlock()<< "\t" << duration_all << endl;
 #endif
 #ifdef STAT
-	cout << *stat;
+	cout << "-----------------------------------" << endl;
+	cout << "black hash stats" << endl;
+	cout << *black_stat;
+	cout << "-----------------------------------" << endl;
+	cout << "white hash stats" << endl;
+	cout << *white_stat;
 #endif
-	if (hash)
-		delete hash;
+	if (black_hash)
+		delete black_hash;
+	if (white_hash)
+		delete white_hash;
 	return 0;
 }
