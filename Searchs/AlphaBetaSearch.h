@@ -2,17 +2,19 @@
 #define ALPHA_BETA_SEARCH_H
 
 #include "../SgSearch.h"
+#include "AlphaBetaSearchHashData.h"
 #include <vector>
 
 const unsigned DEFAULT_DEPTH = 3;
 //----------------------------------------------------------------------------
 template<class State, class Move>
-class AlphaBetaSearch : public SgSearch<State, Move> {
+class AlphaBetaSearch : public SgSearch<State, Move, typename ABSearchHashData<Move> > {
 public:
 	AlphaBetaSearch(SgGame<State, Move>& game,
 					int depth = DEFAULT_DEPTH,
+					SgHashTable<typename ABSearchHashData<Move>>* hash = 0,
 					double alpha = -DBL_INFINITY, double beta = DBL_INFINITY)
-		: SgSearch<State, Move>(game), m_depth(depth), m_alpha(alpha), m_beta(beta) {}
+		: SgSearch<State, Move, typename ABSearchHashData<Move> >(game), m_depth(depth), m_alpha(alpha), m_beta(beta) {}
 	
 	inline Move generateMove();
 private:
@@ -26,6 +28,17 @@ private:
 //----------------------------------------------------------------------------
 template<class State, class Move>
 double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, double beta, Move& best_move) {
+	if (getHash()) {
+		ABSearchHashData<Move> hash_data;
+		if (getHash()->lookup(getSnap().getHashCode(), hash_data)
+			&& hash_data.getDepth() >= depth) {
+			if (hash_data.isExactValue()) {
+				best_move = hash_data.getBestMove();
+				return -hash_data.getValue();
+			} else
+				hash_data.adjustBounds(alpha, beta);
+		}
+	}
 	std::vector<Move> moves;
 	this->getSnap().generate(moves);
 	
@@ -76,7 +89,17 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 		if (best_value > local_alpha)
 			local_alpha = best_value;
 	}
-
+	if (getHash()) {
+		bool is_upper_bound = false, is_lower_bound = false, is_exact_value = false;
+		if (best_value >= beta)
+			is_upper_bound = true;
+		else if (best_value <= local_alpha)
+			is_lower_bound = true;
+		else
+			is_exact_value = true;
+		ABSearchHashData<Move> new_data(depth, best_value, best_move, is_upper_bound, is_lower_bound, is_exact_value);
+		getHash()->store(getSnap().getHashCode(), new_data);
+	}
 	return best_value;
 }
 

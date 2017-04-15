@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "SgHash.h"
+
 #include <cassert>
 #include <iostream>
 #include <vector>
@@ -40,7 +42,7 @@ namespace {
 template<class State, class Move>
 class SgGame {
 public:
-	SgGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay);
+	SgGame(SgGrid rows, SgGrid cols, int num_piece, SgBlackWhite toPlay);
 
 	SgGame() = default;
 
@@ -104,6 +106,8 @@ public:
   	/** Generate the set of all legal moves at current game position,
   		Store them in the vector pointed by moves.(copy ref for speed). */
   	virtual void generate(std::vector<Move>& moves) = 0;
+
+	SgHashCode getHashCode() const;
 
 	/** Print all current board.
 		Here we offer a 'template method' like method, traverse all board,
@@ -175,15 +179,16 @@ private:
 	SgPoint m_size;
 
 	/** Number of different types in a grid. Used for Zobrist hasing in future */
-	//int m_numPiece;
+	int m_num_piece;
 
 	SgBlackWhite m_firstPlayer, m_toPlay;
 };
 //----------------------------------------------------------------------------
 template<class State, class Move>
-SgGame<State, Move>::SgGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay)
+SgGame<State, Move>::SgGame(SgGrid rows, SgGrid cols, int num_piece, SgBlackWhite toPlay)
 	: m_rows(rows),
 	m_cols(cols),
+	m_num_piece(num_piece),
 	m_size(computeBoardSize(m_rows, m_cols)),
 	//m_numPiece(State::GetNumPiece()),
 	m_firstPlayer(toPlay),
@@ -192,6 +197,28 @@ SgGame<State, Move>::SgGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay)
 {
 	m_board = std::vector<State>(m_size, State(SG_BORDER));
 	/** The initialization of playing grid is the duty of all concrete games */
+}
+
+template<class State, class Move>
+SgHashCode SgGame<State, Move>::getHashCode() const {
+	SgHashCode code = 0;
+	ZobristNumbers zobrist_numbers = ZobristNumbers::global();
+	SgGrid rows = getRows();
+	SgGrid cols = getCols();
+	for (SgGrid it_row = 1; it_row <= rows; it_row++) {
+		for (SgGrid it_col = 1; it_col <= cols; it_col++) {
+			SgPoint pt = getPt(it_col, it_row);
+			State state = getState(pt);
+			if (state.getColor() != SG_EMPTY) {
+				// all none empty block will have a hash code
+				int index = pt * m_num_piece + state.getColor(); 
+				// each piece at each block will get an unique hash code
+				// from the random hash code library
+				code ^= zobrist_numbers.get(index);
+			}
+		}
+	}
+	return code;
 }
 
 /** Print, as a so called 'template method'.

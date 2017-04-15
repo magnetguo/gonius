@@ -3,8 +3,8 @@
 #include "../SgSearch.h"
 #include <random>
 //----------------------------------------------------------------------------
-template<class State, class Move>
-class RandomSearch : public SgSearch<State, Move> {
+template<class State, class Move, class DATA>
+class RandomSearch : public SgSearch<State, Move, DATA> {
 public:
 	RandomSearch(SgGame<State, Move>& game)
 		: SgSearch<State, Move>(game) { }
@@ -14,8 +14,8 @@ private:
 	std::random_device rd;
 };
 //----------------------------------------------------------------------------
-template<class State, class Move>
-Move RandomSearch<State, Move>::generateMove() {
+template<class State, class Move, class DATA>
+Move RandomSearch<State, Move, DATA>::generateMove() {
 	this->t.start();
 	std::vector<Move> moves;
 	this->getSnap().generate(moves);

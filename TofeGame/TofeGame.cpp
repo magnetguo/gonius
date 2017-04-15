@@ -7,7 +7,7 @@
 //----------------------------------------------------------------------------
 
 TofeGame::TofeGame(SgGrid rows, SgGrid cols, SgBlackWhite toPlay)
-	: SgGame<TofeState, TofeMove>(rows, cols, SG_WHITE)
+	: SgGame<TofeState, TofeMove>(rows, cols, rows*cols+1, SG_WHITE)
 {
 	/* After the initial of base class,
 		We should initialize the first 2 or 4 on a random place */

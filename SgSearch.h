@@ -4,16 +4,21 @@
 #include <limits>
 #include "SgGame.h"
 #include "Timer.h"
+#include "SgHashTable.h"
 
 const double DBL_INFINITY = std::numeric_limits<double>::infinity();
 //----------------------------------------------------------------------------
-template<class State, class Move>
+template<class State, class Move, class DATA>
 class SgSearch {
 public:
 	SgSearch(SgGame<State, Move>& s) : m_snap(s) { }
 
 	double getSerachDuration() const {
 		return t.getDuration();
+	}
+
+	SgHashTable<DATA>* getHash() {
+		return m_hash;
 	}
 
 	virtual ~SgSearch() {
@@ -28,6 +33,8 @@ protected:
 	Timer t;
 private:
 	SgGame<State, Move>& m_snap;
+
+	SgHashTable<DATA>* m_hash;
 
 	/** not implemented to prevent copying. */
 	SgSearch(const SgSearch&);
