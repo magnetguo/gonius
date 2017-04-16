@@ -120,6 +120,9 @@ public:
 		m_last_max_block_stack = g.m_last_max_block_stack;
 	}
 
+	typedef TofeState StateType;
+	typedef TofeMove MoveType;
+
 	SgGame* copy() const override;
 
 	bool play(SgBlackWhite color, TofeMove move) override;

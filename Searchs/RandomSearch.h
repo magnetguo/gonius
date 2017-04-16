@@ -18,7 +18,7 @@ template<class State, class Move, class DATA>
 Move RandomSearch<State, Move, DATA>::generateMove() {
 	this->t.start();
 	std::vector<Move> moves;
-	this->getSnap().generate(moves);
+	this->getSnap()->generate(moves);
 	if (moves.empty())
 		return Move();
 	std::uniform_int_distribution<int> uni(0, moves.size() - 1);

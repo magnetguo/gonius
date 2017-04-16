@@ -11,12 +11,8 @@ const double DBL_INFINITY = std::numeric_limits<double>::infinity();
 template<class State, class Move, class DATA>
 class SgSearch {
 public:
-	SgSearch(SgGame<State, Move>& s, 
-		SgHashTable<DATA>* black_hash, 
-		SgHashTable<DATA>* white_hash) 
-	: m_snap(s), 
-	m_black_hash(black_hash),
-	m_white_hash(white_hash) { }
+	SgSearch() 
+	: m_snap(0) { }
 
 	double getSerachDuration() const {
 		return t.getDuration();
@@ -30,18 +26,29 @@ public:
 		return m_white_hash;
 	}
 
-	virtual ~SgSearch() {
-		delete &m_snap;
+	void setBlackHash(SgHashTable<DATA>* bh) {
+		m_black_hash = bh;
 	}
+
+	void setWhiteHash(SgHashTable<DATA>* wh) {
+		m_white_hash = wh;
+	}
+
+	void setSnap(SgGame<State, Move>* snap) {
+		m_snap = snap;
+	}
+
+	virtual ~SgSearch() {}
 
 	virtual Move generateMove() = 0;
 protected:
-	SgGame<State, Move>& getSnap() {
+	SgGame<State, Move>* getSnap() {
 		return m_snap;
 	}
+
 	Timer t;
 private:
-	SgGame<State, Move>& m_snap;
+	SgGame<State, Move>* m_snap;
 
 	SgHashTable<DATA>* m_black_hash;
 

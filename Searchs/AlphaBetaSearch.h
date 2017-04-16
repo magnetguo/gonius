@@ -10,12 +10,12 @@ const unsigned DEFAULT_DEPTH = 3;
 template<class State, class Move>
 class AlphaBetaSearch : public SgSearch<State, Move, ABSearchHashData<Move> > {
 public:
-	AlphaBetaSearch(SgGame<State, Move>& game,
-					int depth = DEFAULT_DEPTH,
+	typedef ABSearchHashData<Move> HashDataType;
+	AlphaBetaSearch(int depth = DEFAULT_DEPTH,
 					SgHashTable<ABSearchHashData<Move>>* black_hash = 0,
 					SgHashTable<ABSearchHashData<Move>>* white_hash = 0,
 					double alpha = -DBL_INFINITY, double beta = DBL_INFINITY)
-		: SgSearch<State, Move, ABSearchHashData<Move> >(game, black_hash, white_hash)
+		: SgSearch<State, Move, ABSearchHashData<Move> >()
 		, m_depth(depth), m_alpha(alpha), m_beta(beta) {}
 	
 	inline Move generateMove();
@@ -32,8 +32,8 @@ template<class State, class Move>
 double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, double beta, Move& best_move) {
 	if (this->getBlackHash() && this->getWhiteHash()) {
 		ABSearchHashData<Move> hash_data;
-		if (this->getSnap().getToPlay() == SG_BLACK) {
-			if (this->getBlackHash()->lookup(this->getSnap().getHashCode(), 
+		if (this->getSnap()->getToPlay() == SG_BLACK) {
+			if (this->getBlackHash()->lookup(this->getSnap()->getHashCode(), 
 				hash_data)
 			&& hash_data.getDepth() >= depth) {
 				if (hash_data.isExactValue()) {
@@ -43,7 +43,7 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 					hash_data.adjustBounds(alpha, beta);
 			}
 		} else {
-			if (this->getWhiteHash()->lookup(this->getSnap().getHashCode(), 
+			if (this->getWhiteHash()->lookup(this->getSnap()->getHashCode(), 
 				hash_data)
 			&& hash_data.getDepth() >= depth) {
 				if (hash_data.isExactValue()) {
@@ -55,19 +55,19 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 		}
 	}
 	std::vector<Move> moves;
-	this->getSnap().generate(moves);
+	this->getSnap()->generate(moves);
 	
-	if (this->getSnap().hasWin())
+	if (this->getSnap()->hasWin())
 		return -DBL_INFINITY;
 
 	if (depth == 0) {
 #ifdef DEBUG
 		std::cout << "evaluate!" << std::endl;
 #endif
-		return this->getSnap().evaluate();
+		return this->getSnap()->evaluate();
 	}
 
-	if (moves.size() == 0 || this->getSnap().endOfGame()) {
+	if (moves.size() == 0 || this->getSnap()->endOfGame()) {
 		return 0;
 	}
 
@@ -78,10 +78,10 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 		std::cout << depth << "->" << i << ": " << moves.size() << std::endl;
 #endif
 		Move move = moves.at(i);
-		bool played = this->getSnap().play(move);
+		bool played = this->getSnap()->play(move);
 		if (!played) {
 #ifdef DEBUG
-		std::cout << "playing: "<< this->getSnap().getToPlay() << std::endl;
+		std::cout << "playing: "<< this->getSnap()->getToPlay() << std::endl;
 		std::cout << "break!" << std::endl;
 #endif
 			break;
@@ -89,8 +89,8 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 
 		Move nullmove = Move();
 		double value = -alphaBeta(depth - 1, -beta, -local_alpha, nullmove);
-		this->getSnap().takeback();
-		this->getSnap().switchToPlay();
+		this->getSnap()->takeback();
+		this->getSnap()->switchToPlay();
 		if (value > best_value) {
 			best_value = value;
 			best_move = move;
@@ -106,7 +106,7 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 	}
 	if (this->getBlackHash() && this->getWhiteHash()) {
 		bool is_upper_bound = false, is_lower_bound = false, is_exact_value = false;
-		SgBlackWhite to_play = this->getSnap().getToPlay();
+		SgBlackWhite to_play = this->getSnap()->getToPlay();
 		if (best_value >= beta)
 			is_upper_bound = true;
 		else if (best_value <= local_alpha)
@@ -116,9 +116,9 @@ double AlphaBetaSearch<State, Move>::alphaBeta(unsigned depth, double alpha, dou
 		ABSearchHashData<Move> new_data(depth, best_value, best_move, is_upper_bound, is_lower_bound, is_exact_value);
 		
 		if (to_play == SG_BLACK) {
-			this->getBlackHash()->store(this->getSnap().getHashCode(), new_data);
+			this->getBlackHash()->store(this->getSnap()->getHashCode(), new_data);
 		} else {
-			this->getWhiteHash()->store(this->getSnap().getHashCode(), new_data);
+			this->getWhiteHash()->store(this->getSnap()->getHashCode(), new_data);
 		}
 	}
 	return best_value;

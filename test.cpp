@@ -2,10 +2,14 @@
 #include "./TofeGame/TofeHeuristic/TofeHeuristic.h"
 #include "./Searchs/AlphaBetaSearch.h"
 #include "./Searchs/RandomSearch.h"
+#include "SgPlayer.h"
 #include "SgHashTable.h"
+
 #include <iostream>
 #include <random>
 #include <string>
+
+//----------------------------------------------------------------------------
 
 #define TEST
 
@@ -15,26 +19,21 @@ using std::endl;
 
 int main(int argc, char const *argv[]) {
 	TofeGame game(4, 4, SG_WHITE);
+
+	int depth = std::stoi(argv[1]);
+
+	AlphaBetaSearch<decltype(game)::StateType, decltype(game)::MoveType>se(depth); // here we create se with no hash table
+
+	SgPlayer<decltype(game), decltype(se)> b_player(game, SG_BLACK, &se, true, true);
+	SgPlayer<decltype(game), decltype(se)> w_player(game, SG_WHITE, &se, true, true);
+
 	std::random_device rd;
 	std::uniform_int_distribution<int> uni(0, 1);
-	int depth = std::stoi(argv[1]);
-#ifdef TEST	
-	double duration_all = 0;
-#endif
-	SgHashStatistics* black_stat = new SgHashStatistics();
-	SgHashStatistics* white_stat = new SgHashStatistics();
-	SgHashTable<ABSearchHashData<TofeMove>>* black_hash 
-	= new SgHashTable<ABSearchHashData<TofeMove>>(black_stat);
-	SgHashTable<ABSearchHashData<TofeMove>>* white_hash 
-	= new SgHashTable<ABSearchHashData<TofeMove>>(white_stat);
 
 	while (!game.endOfGame()) {
 #ifdef DEBUG		
 		game.print(cout);
 #endif
-
-	AlphaBetaSearch<TofeState, TofeMove>se(*game.copy(), 
-		depth, black_hash, white_hash);
 
 #ifdef HUMAN		
 		/** recommendation module, for human interface */
@@ -66,8 +65,7 @@ int main(int argc, char const *argv[]) {
 		if(!game.play(move)) continue;
 #endif	
 #ifdef TEST	
-		TofeMove generate_move = se.generateMove();
-		duration_all += se.getSerachDuration();
+		decltype(game)::MoveType generate_move = w_player.generateMove();
 		//TofeMove generate_move = re.generateMove();
 		if (generate_move.isNullMove())
 			break;
@@ -84,7 +82,7 @@ int main(int argc, char const *argv[]) {
 	cout << "the max is " << game.getMaxBlock() << endl;
 #endif
 #ifdef TEST
-	cout << game.getMaxBlock()<< "\t" << duration_all << endl;
+	cout << game.getMaxBlock()<< "\t" << w_player.getAllSearchTime() << endl;
 #endif
 #ifdef STAT
 	cout << "-----------------------------------" << endl;
@@ -94,9 +92,6 @@ int main(int argc, char const *argv[]) {
 	cout << "white hash stats" << endl;
 	cout << *white_stat;
 #endif
-	if (black_hash)
-		delete black_hash;
-	if (white_hash)
-		delete white_hash;
+
 	return 0;
 }
