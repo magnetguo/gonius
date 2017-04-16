@@ -17,7 +17,7 @@ public:
 						((is_stat) 
 							? (new SgHashTable<typename Search::HashDataType>(new SgHashStatistics()))
 							: (new SgHashTable<typename Search::HashDataType>()))
-						: 0), m_time(0) { 
+						: 0) { 
 		if (color == SG_BLACK)
 			m_search->setBlackHash(m_hash);
 		else
@@ -26,25 +26,19 @@ public:
 
 	~SgPlayer() {
 		delete m_intern_game; // the intern game created by last generateMove
-		delete m_hash; // hash is in charge of deleting its own stat if there is
-		delete m_search; // it's player's duty to delete search create by engine on heap
+		if (m_hash)
+			delete m_hash; // hash is in charge of deleting its own stat if there is
 	}
 
 	SgHashTable<typename Search::HashDataType>* getHash() {
 		return m_hash; // if 0, no hash
 	}
 
-	double getAllSearchTime() const {
-		return m_time;
-	}
-
 	typename Game::MoveType generateMove() {
 		delete m_intern_game;
 		m_intern_game = m_extern_game.copy();
 		m_search->setSnap(m_intern_game);
-		typename Game::MoveType move = m_search->generateMove();
-		m_time += m_search->getSerachDuration();
-		return move;
+		return m_search->generateMove();
 	}
 
 private:
@@ -55,7 +49,6 @@ private:
 	// here we can put base pointer or directly SearchType pointer
 	SgSearch<typename Game::StateType, typename Game::MoveType, 
 		typename Search::HashDataType>* m_search;
-	double m_time;
 };
 
 //----------------------------------------------------------------------------

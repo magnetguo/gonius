@@ -83,6 +83,10 @@ public:
 	/** return true and the data stored under that code, or false if none stored. */
 	bool lookup(SgHashCode code, DATA& data) const;
 
+	SgHashStatistics* getStatistics() const {
+		return m_stats;
+	}
+
 	/** Try to store data under the hash code.
 		Return whether the data was stored. The only reason for not storing it would be some
 		better data already hashing to the same hash code. */
@@ -125,7 +129,8 @@ SgHashTable<DATA>::SgHashTable(const SgHashTable& other)
 template<class DATA>
 SgHashTable<DATA>::~SgHashTable() {
 	delete[] m_entry;
-	delete m_stats;
+	if (m_stats)
+		delete m_stats;
 }
 
 template<class DATA>

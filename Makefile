@@ -1,12 +1,12 @@
 test: test.o TofeGame.o TofeHeuristicEmptyFactory.o TofeHeuristicDiffFactory.o TofeHeuristicReverseFactory.o TofeHeuristicDiff.o TofeHeuristicReverse.o SgHashTable.o
 	g++ -o test test.o TofeGame.o TofeHeuristicEmptyFactory.o TofeHeuristicDiffFactory.o TofeHeuristicReverseFactory.o TofeHeuristicDiff.o TofeHeuristicReverse.o SgHashTable.o -std=C++11
-	mv test ./DoTest/TestTwoHash
+	mv test ./DoTest
 
 SgHashTable.o: SgHashTable.cpp
 	g++ -c SgHashTable.cpp -std=c++11
 
 test.o: test.cpp
-	g++ -c test.cpp -std=c++11 -DTEST -DSTAT
+	g++ -c test.cpp -std=c++11 -DTEST
 
 TofeHeuristicEmptyFactory.o: ./TofeGame/TofeHeuristic/TofeHeuristicEmpty/TofeHeuristicEmptyFactory.cpp
 	g++ -c ./TofeGame/TofeHeuristic/TofeHeuristicEmpty/TofeHeuristicEmptyFactory.cpp -std=c++11

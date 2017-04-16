@@ -24,8 +24,8 @@ int main(int argc, char const *argv[]) {
 
 	AlphaBetaSearch<decltype(game)::StateType, decltype(game)::MoveType>se(depth); // here we create se with no hash table
 
-	SgPlayer<decltype(game), decltype(se)> b_player(game, SG_BLACK, &se, true, true);
-	SgPlayer<decltype(game), decltype(se)> w_player(game, SG_WHITE, &se, true, true);
+	SgPlayer<decltype(game), decltype(se)> b_player(game, SG_BLACK, &se, false, true);
+	SgPlayer<decltype(game), decltype(se)> w_player(game, SG_WHITE, &se, false, true);
 
 	std::random_device rd;
 	std::uniform_int_distribution<int> uni(0, 1);
@@ -82,15 +82,14 @@ int main(int argc, char const *argv[]) {
 	cout << "the max is " << game.getMaxBlock() << endl;
 #endif
 #ifdef TEST
-	cout << game.getMaxBlock()<< "\t" << w_player.getAllSearchTime() << endl;
+	cout << game.getMaxBlock()<< "\t" << se.getSerachDuration() << endl;
 #endif
 #ifdef STAT
 	cout << "-----------------------------------" << endl;
 	cout << "black hash stats" << endl;
-	cout << *black_stat;
+	cout << *b_player.getHash()->getStatistics() << endl;
 	cout << "-----------------------------------" << endl;
-	cout << "white hash stats" << endl;
-	cout << *white_stat;
+	cout << *w_player.getHash()->getStatistics() << endl;
 #endif
 
 	return 0;
