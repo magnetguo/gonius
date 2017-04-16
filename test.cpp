@@ -21,11 +21,13 @@ int main(int argc, char const *argv[]) {
 	TofeGame game(4, 4, SG_WHITE);
 
 	int depth = std::stoi(argv[1]);
+	bool is_stat = std::stoi(argv[2]);
+	bool is_hash = std::stoi(argv[3]);
 
 	AlphaBetaSearch<decltype(game)::StateType, decltype(game)::MoveType>se(depth); // here we create se with no hash table
 
-	SgPlayer<decltype(game), decltype(se)> b_player(game, SG_BLACK, &se, false, true);
-	SgPlayer<decltype(game), decltype(se)> w_player(game, SG_WHITE, &se, false, true);
+	SgPlayer<decltype(game), decltype(se)> b_player(game, SG_BLACK, &se, is_stat, is_hash);
+	SgPlayer<decltype(game), decltype(se)> w_player(game, SG_WHITE, &se, is_stat, is_hash);
 
 	std::random_device rd;
 	std::uniform_int_distribution<int> uni(0, 1);
@@ -77,20 +79,23 @@ int main(int argc, char const *argv[]) {
 		else
 			game.play(TofeMove(game.pickOneRandomEmptyPos(), 4));
 	}
+
 #ifdef HUMAN	
 	cout << "end of game!" << endl;
 	cout << "the max is " << game.getMaxBlock() << endl;
 #endif
+
 #ifdef TEST
 	cout << game.getMaxBlock()<< "\t" << se.getSerachDuration() << endl;
 #endif
-#ifdef STAT
+
+if (is_stat) {
 	cout << "-----------------------------------" << endl;
 	cout << "black hash stats" << endl;
 	cout << *b_player.getHash()->getStatistics() << endl;
 	cout << "-----------------------------------" << endl;
 	cout << *w_player.getHash()->getStatistics() << endl;
-#endif
+}
 
 	return 0;
 }
